@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper 
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.kosa.hello.board.BoardDAO"><!-- namespace 별칭 써 줄임말 만들기 -->
+	
+	<select id="getBoard" resultType="org.kosa.mini.board.BoardVO">
+		SELECT 
+		    P.POSTNO,
+		    P.TITLE,
+		    P.CONTENT,
+		    M.ID,
+		    P.VIEWS,
+		    P.CREATEDAT
+		FROM 
+		    TB_POST P
+			JOIN 
+				TB_POSTTYPE PT ON P.BOARDNO = PT.BOARDNO
+			JOIN 
+			    TB_MEMBER M ON P.MEMBER_NO = M.MEMBER_NO
+		WHERE 
+		    UPPER(P.DELETEYN) = 'N' AND UPPER(M.DELETEYN) = 'N' AND PT.BOARDNAME = #{board}
+	</select>
+</mapper>

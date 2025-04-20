@@ -1,0 +1,21 @@
+package org.kosa.mini.board;
+
+import java.sql.Date;
+
+import lombok.Data;
+
+@Data
+public class BoardVO {
+	private int postNo; // 게시글번호
+	private int boardNo; // 게시판번호
+	private int memberNo; // 회원번호
+	private String title; // 제목
+	private String content; // 내용
+	private String boardName; // 게시판명
+	private int views; // 조회수
+	private String id; // 작성자 아이디
+	private Date createdAt; // 작성 일시
+	private char delete_yn; // 삭제 여부
+	private Date deletedAt; // 삭제 일시
+	private int parent_no; // 부모글 번호
+}

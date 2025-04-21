@@ -38,4 +38,11 @@
 		<appender-ref ref="console" />
 	</root>
 	
+	<logger name="org.mybatis">
+        <level value="debug"/>
+    </logger>
+    <logger name="java.sql">
+        <level value="debug"/>
+    </logger>
+	
 </log4j:configuration>

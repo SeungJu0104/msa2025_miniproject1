@@ -8,7 +8,5 @@ import org.apache.ibatis.annotations.Mapper;
 public interface BoardDAO {
 
 	public List<BoardVO> getBoard(String board);
-	
-	
 
 }

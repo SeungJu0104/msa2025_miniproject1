@@ -19,21 +19,26 @@
 		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 		padding: 30px;
 		margin-top: 20px;
+		width: 100%;
 	}
 	table{
 		border: 3px solid blanchedalmond;
 		border-collapse: collapse;
 		border-radius: 10px;
+		max-width: 100%;
 	}
 	tbody > tr:hover td {
 		background-color: #007bff;
 		color: white;
 	}
+	thead, tbody{
+		max-width: 100%;
+	}
 	tr, th, td{
 		text-align: center;
 	}
 	tr {
-		max-width: 300px;
+		max-width: 100%;
 		white-space: nowrap; 
 	   	overflow: hidden;         
 	   	text-overflow: ellipsis;

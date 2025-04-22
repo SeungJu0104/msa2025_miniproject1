@@ -1,4 +1,4 @@
-package org.kosa.mini.paging;
+package org.kosa.mini.util;
 
 public class Util {
 	public static int parseInt(String str, int defaultValue) {

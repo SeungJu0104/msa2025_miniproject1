@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/mini.css">
 <script src="${PageContext.request.pageContext }/resources/js/miniJs.js"></script>
 </head>
-<body>
+<body data-context="${pageContext.request.contextPath}">
 	<h1>회원 상세보기</h1>
 	<div class="container">
 		<table class="table table-striped-columns">

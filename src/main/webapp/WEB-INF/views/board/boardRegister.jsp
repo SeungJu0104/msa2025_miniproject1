@@ -11,7 +11,29 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/mini.css">
 <script src="${PageContext.request.pageContext }/resources/js/miniJs.js"></script>
 </head>
-<body>
-
+<body data-context="${pageContext.request.contextPath}">
+    <h1>게시글 등록</h1>
+    <div class="container">
+        <form action="" method="post">
+            <div class="mb-3">
+                <label for="title" class="form-label">제목</label>
+                <input type="text" class="form-control" id="board_title" name="title" placeholder="제목을 입력하세요">
+            </div>
+            <div class="mb-3">
+                <label for="board" class="form-label">게시판 선택</label>
+                <select class="form-select form-select-sm" id="board_select" name="board">
+                    <option selected>게시판 선택</option>
+                    <option value="notice">공지사항</option>
+                    <option value="q&a">Q&A</option>
+                    <option value="freeboard">자유 게시판</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="content" class="form-label">내용</label>
+                <textarea class="form-control" id="board_content" name="content" rows="10" placeholder="내용을 입력하세요"></textarea>
+            </div>
+            <button type="submit" class="btn-submit">게시글 등록</button>
+        </form>
+    </div>
 </body>
 </html>

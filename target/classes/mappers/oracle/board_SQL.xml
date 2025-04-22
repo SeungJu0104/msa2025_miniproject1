@@ -5,23 +5,47 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.kosa.mini.board.BoardDAO"><!-- namespace 별칭 써 줄임말 만들기 -->
+	<sql id="search">
+		UPPER(P.DELETEYN) = 'N' AND UPPER(M.DELETEYN) = 'N' AND BT.BOARDNAME = #{board}
+		<if test="searchValue != null and searchValue != ''">
+			AND content LIKE concat(concat('%', #{searchValue}), '%')
+		</if>
+	</sql>
+	<sql id="field1">
+		P.POSTNO, BT.BOARDNAME, M.ID, P.TITLE, P.CONTENT, P.WRITER, P.VIEWS, P.CREATEDAT
+	</sql>
+	<sql id="join">
+		TB_POST P
+			JOIN 
+			    TB_BOARDTYPE BT ON P.BOARDNO = BT.BOARDNO
+			JOIN 
+			    TB_MEMBER M ON P.MEMBERNO = M.MEMBERNO
+	</sql>
 	<select id="getBoard" resultType="org.kosa.mini.board.BoardVO">
-		SELECT 
-		    P.POSTNO,
-		    P.TITLE,
-		    P.CONTENT,
-		    M.ID,
-		    BT.BOARDNAME,
-		    P.VIEWS,
-		    P.CREATEDAT
+		SELECT *
+		FROM
+			(SELECT ROWNUM RNUM, B.*
+			FROM
+				(SELECT 
+					<include refid="field1"/>
+				FROM 
+					<include refid="join"/>
+				WHERE 
+				     <include refid="search"/>) B
+			WHERE ROWNUM BETWEEN 1 AND #{end}) POST
+		WHERE RNUM BETWEEN #{start} AND #{end}
+		ORDER BY POSTNO DESC
+	</select>
+	<select id="getTotalCount" resultType="int">
+		SELECT COUNT(*)
 		FROM 
 		    TB_POST P
-		JOIN 
-		    TB_BOARDTYPE BT ON P.BOARDNO = BT.BOARDNO
-		JOIN 
-		    TB_MEMBER M ON P.MEMBERNO = M.MEMBERNO
+			JOIN 
+			    TB_BOARDTYPE BT ON P.BOARDNO = BT.BOARDNO
+			JOIN 
+			    TB_MEMBER M ON P.MEMBERNO = M.MEMBERNO
 		WHERE 
-		    UPPER(P.DELETEYN) = 'N' AND UPPER(M.DELETEYN) = 'N' AND BT.BOARDNAME = #{board}
+		     <include refid="search"/>
 	</select>
 	
 </mapper>

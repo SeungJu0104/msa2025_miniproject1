@@ -6,13 +6,7 @@
 <title>Home</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/mini.css">
-<script src="${pageContext.request.contextPath}/resources/js/miniJs.js"></script>
-<c:if test="${not empty errorMsg }">
-	<script type="text/javascript">
-		alert("${errorMsg}");
-	</script>
-</c:if>
-<!-- 나중에 별도 jsp로 빼서 코드 중복 줄이기? -->
+<c:import url="/WEB-INF/views/inc/showErr.jsp" />
 </head>
 <body data-context="${pageContext.request.contextPath}">
 <div class="container">
@@ -39,12 +33,18 @@
 		      <li class="nav-item">
 		        <a class="nav-link" href="#">자유게시판</a>
 		      </li>
+			  <li class="nav-item">
+		        <a class="nav-link" href="#" id="memberList">회원목록</a>
+		      </li>
 		    </ul>
 		  </div>
-		  <button class="btn btn-outline-success me-2" type="button">로그인</button>
-		  <button class="btn btn-outline-success me-2" type="button">회원가입</button>
+		  <button class="btn btn-outline-success me-2 nologin" id="goLogin" type="button">로그인</button>
+		  <button class="btn btn-outline-success me-2 login" id="goLogOut" type="button" >로그아웃</button>
+		  <button class="btn btn-outline-success me-2 login" id="updateMember" type="button">정보수정</button>
+		  <button class="btn btn-outline-success me-2 nologin" id="goRegister" type="button">회원가입</button>
 		</div>
 	</nav>
 </div>
+<script src="${pageContext.request.contextPath}/resources/js/miniJs.js"></script>
 </body>
 </html>

@@ -10,7 +10,7 @@
 <script src="${PageContext.request.pageContext }/resources/js/miniJs.js"></script>
 <title>Insert title here</title>
 </head>
-<body>
+<body data-context="${pageContext.request.contextPath}">
 	<h1>게시판 상세보기</h1>
 	<div class="container">
 		<table class="table table-striped-columns">
@@ -53,8 +53,6 @@
 		<p>내용</p>
 		<div id="boardDetail_content">
 			규칙을 지켜주세요.
-		</div>
-
 		</div>
 	</div>
 	

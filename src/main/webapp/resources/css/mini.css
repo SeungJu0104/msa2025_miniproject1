@@ -43,6 +43,9 @@
 	   	overflow: hidden;         
 	   	text-overflow: ellipsis;
 	}
+	.nav-item:hover a{
+	    font-weight: bold;
+	}
 	.form-label {
 	   font-weight: bold;
 	   color: #495057;

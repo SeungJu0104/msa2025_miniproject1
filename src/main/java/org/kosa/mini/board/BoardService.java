@@ -24,4 +24,12 @@ public class BoardService {
 		return new PageResponseVO<BoardVO>(board, pageNo, bDao.getBoard(map), bDao.getTotalCount(map), size, parserPage);
 	}
 
+	public BoardVO getPost(BoardVO post) {
+		return bDao.getPost(post);
+	}
+
+	public int addViewCnt(int postNo) {
+		return bDao.addViewCnt(postNo);
+	}
+
 }

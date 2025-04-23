@@ -22,7 +22,7 @@
                 <input type="password" id="login_password" name="password" class="form-control">
             </div>
             <div class="form-group">
-                <button type="submit" class="btn btn-primary btn-submit" id="login">로그인</button>
+                <button type="submit" class="btn btn-primary col-6" id="login">로그인</button>
             </div>
         </form>
     </div>

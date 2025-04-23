@@ -66,7 +66,7 @@
 		WHERE
 			MEMBERNO=#{memberNo} AND DELETEYN = 'N'
 	</update>
-	<select id="getTotalCount">
+	<select id="getTotalCount" resultType="int">
 		SELECT 
 			COUNT(*)
 		FROM 
@@ -106,7 +106,7 @@
 	</insert>
 	<select id="getInfo" resultType="org.kosa.mini.member.MemberVO">
 		SELECT 
-			ID, PASSWORD, NAME, PHONENUMBER, POSTCODE, ADDRESS, DETAILADDRESS
+			MEMBERNO, ID, PASSWORD, NAME, PHONENUMBER, POSTCODE, ADDRESS, DETAILADDRESS, CREATEDAT
 		FROM
 			TB_MEMBER
 		WHERE
@@ -116,7 +116,7 @@
 		UPDATE
 			TB_MEMBER
 		SET
-			PASSWORD = #{password} , NAME = #{name} , POSTCODE = #{postCode} , ADDRESS = #{address} , DETAILADDRESS = #{detailAddress}
+			PASSWORD = #{password} , NAME = #{name} , POSTCODE = #{postCode} , ADDRESS = #{address}, PHONENUMBER=#{phoneNumber} , DETAILADDRESS = #{detailAddress}
 		WHERE
 			DELETEYN = 'N' AND ID = #{id}
 	</update>

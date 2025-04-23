@@ -8,7 +8,7 @@
 <title>회원가입</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/mini.css">
-<script src="${pageContext.request.contextPath }/resources/js/miniJs.js"></script>
+<jsp:include page="/WEB-INF/views/inc/showErr.jsp" />
 </head>
 <body data-context="${pageContext.request.contextPath}">
   <h1>회원가입</h1>
@@ -20,13 +20,14 @@
           	<input type="text" class="form-control" id="userid" name="id" placeholder="아이디">
             <button class="btn btn-outline-success me-2 " id="idDupChk" type="button">중복확인</button>
           </div>
-          <small id="idInfo" style="display : none">아이디는 8자이며, 영문자와 숫자만 포함해야 합니다.</small>
+          <small class="idInfo" style="display : none">아이디는 8~10자이며, 영문자와 숫자만 포함해야 합니다.</small>
         </div>
         <div class="mb-3">
           <label for="password" class="form-label">비밀번호</label>
           <input type="password" class="form-control pwChk" id="password" name="password" placeholder="비밀번호" required>
           <input type="password" class="form-control pwChk" id="passwordValid" placeholder="비밀번호확인" required>
-          <small id="pwInfo" style="display : none">비밀번호는 8~12자 사이이며, 영문자, 숫자, 특수문자를 각각 1개 이상 포함해야 합니다.</small>
+          <small class="pwInfo" style="display : none">비밀번호는 8~12자 사이이며, 영문자, 숫자, 특수문자를 각각 1개 이상 포함해야 합니다.</small>
+          <small class="pwInfo2" style="display : none">비밀번호와 비밀번호 확인이 일치하지 않습니다.</small>
         </div>
         <div class="mb-3">
           <label for="name" class="form-label">이름</label>
@@ -34,8 +35,8 @@
         </div>
         <div class="mb-3">
           <label for="handphone" class="form-label">전화번호</label>
-          <input type="tel" class="form-control" id="handphone" name="phoneNumber" placeholder="010-0000-0000" required>
-          <small id="phoneInfo" style="display : none">010-0000-0000 형식으로 입력해주세요.</small>
+          <input type="tel" class="form-control" id="handphone" name="phoneNumber" placeholder="010-0000-0000" maxlength="13" required>
+          <small class="phoneInfo" style="display : none">010-0000-0000 형식으로 입력해주세요.</small>
         </div>
         <div class="mb-3">
             <label for="post_code" class="form-label">우편번호</label>
@@ -72,7 +73,8 @@
           <label for="running">운동</label>
         </div>
          -->
-        <button type="submit" class="btn btn-primary btn-submit" id="memberRegister">전송</button>
+        <button type="submit" class="btn btn-primary col-6" id="memberRegister">전송</button>
     </form>
+    <script src="${pageContext.request.contextPath }/resources/js/miniJs.js"></script>
   </div>
 </html>

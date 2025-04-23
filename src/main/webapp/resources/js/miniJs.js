@@ -1,5 +1,12 @@
-// console.log(contextPath);
-// let contextPath = null;
+let validPwChk = false;
+let pwRegexRes = false;
+let idRegexRes = false;
+let phoneRegexRes = false;
+let idDuplicateChk = false;
+const idRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,10}$/;
+const pwRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])[A-Za-z\d!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{8,12}$/;
+const phoneRegex = /^010-\d{4}-\d{4}$/;
+
 document.addEventListener("DOMContentLoaded", () => {
 
     contextPath = document.body.dataset.context; // body에 context 루트를 담아 넘겨준 것을 받는다.
@@ -13,16 +20,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const memberForm = document.querySelector("#memberForm");
     const memberList = document.getElementById("memberList");
     const updateForm = document.querySelector("#updateForm");
-    const idRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,10}$/;
-    const pwRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])[A-Za-z\d!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{8,12}$/;
-    const phoneRegex = /^010-\d{4}-\d{4}$/;
-    let validPwChk = false;
-    let pwRegexRes = false;
-    let idRegexRes = false;
-    let phoneRegexRes = false;
-    let idDuplicateChk = false;
-
-    console.log(contextPath);
 
     const pathMap = {
         "K리그": "/board/getBoard?board=kleague",
@@ -72,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if(searchForm){
         const path = ((searchForm.type.value == 'member') ? "/member/memberList" : "/board/getBoard");
-        searchForm.action = contextPath + path;
+        formAction(searchForm, path, 'Get');
     }
 
     if(size){
@@ -98,26 +95,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if(document.querySelector("#updateMember")){
         document.querySelector("#updateMember").addEventListener("click", e => {
-            fetch(contextPath + '/member/getMember', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json; charset=utf-8' 
-                },
-                body: JSON.stringify({'id': sessionStorage.getItem("id")})
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if(data.status === 'ok'){
-                        location.href = contextPath + '/member/updateForm';
-                    }else {
-                        alert(data.status);
-                        location.href = contextPath + '/';
-                    }
-                })
-                .catch(error => {
-                    alert("다시 시도해주세요.");
-                    location.href = contextPath + '/';
-                });
+            
+            location.href = contextPath + '/member/getMember?id=' + sessionStorage.getItem("id");
+
+        //     fetch(contextPath + '/member/getMember', {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'application/json; charset=utf-8' 
+        //         },
+        //         body: JSON.stringify({'id': sessionStorage.getItem("id")})
+        //     })
+        //         .then(response => response.json())
+        //         .then(data => {
+        //             if(data.status === 'ok'){
+        //                 location.href = contextPath + '/member/updateForm';
+        //             }else {
+        //                 alert(data.status);
+        //                 location.href = contextPath + '/';
+        //             }
+        //         })
+        //         .catch(error => {
+        //             alert("다시 시도해주세요.");
+        //             location.href = contextPath + '/';
+        //         });
         });
     }
 
@@ -145,7 +145,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 .then(response => response.json())
                 .then(data => {
                     if(data.status === 'ok') {
-                        console.log(data.boardAuth);
                         sessionStorage.setItem('id', data.id);
                         sessionStorage.setItem('boardAuth', data.boardAuth);
                         location.href = contextPath + '/';
@@ -160,85 +159,16 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    if(memberForm){
-        console.log("a");
-        memberForm.addEventListener("submit", e => {
-            preventEvent(e);
-            console.log("b");
-            if(!idRegexRes) {
-                window.alert("아이디는 8~10자 사이이며, 영문자와 숫자만 포함해야 합니다.");
-                memberForm.userid.focus();
-                return;
-            }
-            console.log("c");
-            if(!idDuplicateChk){
-                console.log("id" + idDuplicateChk);
-                alert("아이디 중복확인을 해주세요.");
-                return;
-            }
-            console.log("d");
-            if(!pwRegexRes || !validPwChk) {
-                alert("비밀번호는 8~12자 사이이며, 영문자, 숫자, 특수문자를 각각 1개 이상 포함해야 합니다.");
-                memberForm.password.focus();
-                return;
-            }
-            console.log("e");
-            if(!phoneRegexRes){
-                alert("010-0000-0000 형식으로 입력해주세요.");
-                memberForm.handphone.focus();
-                return;
-            }
-            console.log("f");
-            const data = {
-                "id" : memberForm.userid.value,
-                "password" : memberForm.password.value,
-                "name" : document.querySelector("#name").value,
-                "phoneNumber" : memberForm.phoneNumber.value,
-                "postCode" : memberForm.postCode.value,
-                "address" : memberForm.address.value,
-                "detailAddress" : memberForm.detailAddress.value,
-                "birthDate" : memberForm.birthDate.value
-            }
-
-            console.log(data);
-
-            fetch(contextPath + '/member/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json; charset=utf-8' 
-                },
-                body: JSON.stringify(data)
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if(data.status === 'ok') {
-                        console.log("ok");
-                        alert(data.msg);
-                    }
-                    else {
-                        console.log("not ok");
-                        alert(data.status);
-                    }
-                })
-                .catch(error => {
-                    alert("다시 시도해주세요.");  // 오류 처리
-                });
-
-        });
-    }
-
     if(memberForm?.userid){
         memberForm.userid.addEventListener("input", e => {
             idDuplicateChk = false;
             console.log("id" + idDuplicateChk);
             if(regexNo(idRegex, e.target.value)) {
-                document.querySelector("#idInfo").style.display = 'none';
+                document.querySelector(".idInfo").style.display = 'none';
                 idRegexRes = true;
-                console.log("idRegexRes : " + idRegexRes);
             }else {
-                document.querySelector("#idInfo").style.display = 'block';
+                document.querySelector(".idInfo").style.display = 'block';
                 idRegexRes = false;
-                console.log("idRegexRes : " + idRegexRes);
             }
         });
     }
@@ -253,63 +183,86 @@ document.addEventListener("DOMContentLoaded", () => {
                 },
                 body: JSON.stringify({'id' : memberForm.userid.value})
             })
-                .then(response => response.json())
-                .then(data => {
-                    if(data.status === 'ok') {
-                        alert(data.msg);
-                        idDuplicateChk = true;
-                        console.log("id" + idDuplicateChk);
-                    }
-                    else {
-                        alert(data.status);
-                    }
-                })
-                .catch(error => {
-                    alert("다시 시도해주세요.");  // 오류 처리
-                });
-        });
-    }
-
-    if(memberForm?.password && memberForm?.passwordValid) {
-        document.querySelectorAll(".pwChk").forEach(p => {
-            p.addEventListener("input", e => {
-                document.querySelector("#pwInfo").style.display = regexNo(pwRegex, e.target.value) ? 'none' : 'block';
-            });
-
-            p.addEventListener("blur", e => {
-                if(regexNo(pwRegex, memberForm.password.value) && regexNo(pwRegex, memberForm.passwordValid.value)) pwRegexRes = true;
-                if(pwRegexRes === true && memberForm.password.value === memberForm.passwordValid.value) validPwChk = true;
-                console.log("pwRegexRes : " + pwRegexRes);
-                console.log("validPwChk : " + validPwChk);
-            });
-
-            p.addEventListener("change", e => {
-                validPwChk = false;
-                pwRegexRes = false;
-                console.log("pwRegexRes : " + pwRegexRes);
-                console.log("validPwChk : " + validPwChk);
+            .then(response => response.json())
+            .then(data => {
+                if(data.status === 'ok') {
+                    alert(data.msg);
+                }
+                else {
+                    idDuplicateChk = true;
+                    alert(data.status);
+                }
+            })
+            .catch(error => {
+                alert("다시 시도해주세요.");  // 오류 처리
             });
         });
     }
-
-    if(memberForm?.handphone){
-        memberForm.handphone.addEventListener("input", e => {
-            if(regexNo(phoneRegex, e.target.value)) {
-                document.querySelector("#phoneInfo").style.display = 'none';
-                phoneRegexRes = true;
-                console.log("phoneRegexRes : " + phoneRegexRes);
-            }else {
-                document.querySelector("#phoneInfo").style.display = 'block';
-                phoneRegexRes = false;
-                console.log("phoneRegexRes : " + phoneRegexRes);
-            }
-            
-        });
-    }
-
+    
     if(memberForm?.birthDate){
         memberForm.birthDate.max = new Date().toISOString().split("T")[0];
     }
+
+    if(memberForm){
+        console.log("a");
+        formAction(memberForm, '/member/register', 'post');
+        validate(memberForm); // form 제출 전 검증
+        memberForm.addEventListener("submit", e => {
+
+            if(!idRegexRes) {
+                window.alert("아이디는 8~10자 사이이며, 영문자와 숫자만 포함해야 합니다.");
+                memberForm.userid.focus();
+                preventEvent(e);
+                return;
+            }
+
+            if(!idDuplicateChk){
+                console.log("id" + idDuplicateChk);
+                alert("아이디 중복확인을 해주세요.");
+                preventEvent(e);
+                return;
+            }
+
+            submitValidate(e, memberForm);
+
+        //     // const data = {
+        //     //     "id" : memberForm.userid.value,
+        //     //     "password" : memberForm.password.value,
+        //     //     "name" : document.querySelector("#name").value,
+        //     //     "phoneNumber" : memberForm.phoneNumber.value,
+        //     //     "postCode" : memberForm.postCode.value,
+        //     //     "address" : memberForm.address.value,
+        //     //     "detailAddress" : memberForm.detailAddress.value,
+        //     //     "birthDate" : memberForm.birthDate.value
+        //     // }
+
+        //     // fetch(contextPath + '/member/register', {
+        //     //     method: 'POST',
+        //     //     headers: {
+        //     //         'Content-Type': 'application/json; charset=utf-8' 
+        //     //     },
+        //     //     body: JSON.stringify(data)
+        //     // })
+        //     // .then(response => response.json())
+        //     // .then(data => {
+        //     //     if(data.status === 'ok') {
+        //     //         console.log("ok");
+        //     //         alert(data.msg);
+        //     //     }
+        //     //     else {
+        //     //         console.log("not ok");
+        //     //         alert(data.status);
+        //     //     }
+        //     // })
+        //     // .catch(error => {
+        //     //     alert("다시 시도해주세요.");  // 오류 처리
+        //     // });
+
+        });
+
+    }
+
+
 
     if(goRegister){
         goRegister.addEventListener("click", e => {
@@ -345,46 +298,47 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     if(updateForm){
-
+        formAction(updateForm, '/member/updateMember', 'post');
+        validate(updateForm); // form 제출 전 검증
         updateForm.addEventListener("submit", e => {
-            preventEvent(e);
 
-            const data = {
-                "id":updateForm.id.value,
-                "password":updateForm.password.value,
-                "name":document.querySelector("#name").value,
-                "phoneNumber":updateForm.handphone.value,
-                "postCode":updateForm.postCode.value,
-                "address":updateForm.address.value,
-                "detailAddress":updateForm.detailAddress.value
-            }
+            submitValidate(e, updateForm);
 
-            fetch(contextPath + '/member/updateMember', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json; charset=utf-8' 
-                },
-                body: JSON.stringify(data)
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if(data.status === 'ok'){
-                        location.href = contextPath + '/';
-                    }else{
-                        alert(data.status);
-                    }
-                })
-                .catch(error => {
-                    alert("다시 시도해주세요.");
-                });
-            
+        //     const data = {
+        //         "id":updateForm.id.value,
+        //         "password":updateForm.password.value,
+        //         "name":document.querySelector("#name").value,
+        //         "phoneNumber":updateForm.handphone.value,
+        //         "postCode":updateForm.postCode.value,
+        //         "address":updateForm.address.value,
+        //         "detailAddress":updateForm.detailAddress.value
+        //     }
+
+        //     fetch(contextPath + '/member/updateMember', {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'application/json; charset=utf-8' 
+        //         },
+        //         body: JSON.stringify(data)
+        //     })
+        //     .then(response => response.json())
+        //     .then(data => {
+        //         if(data.status === 'ok'){
+        //             location.href = contextPath + '/';
+        //         }else{
+        //             alert(data.status);
+        //         }
+        //     })
+        //     .catch(error => {
+        //         alert("다시 시도해주세요.");
+        //     });         
         });
     }
 
     if(document.querySelector("#memberDel")){
         document.querySelector("#memberDel").addEventListener("click", e => {
 
-            if(!confirm("삭제하시겠습니까?")) return;
+            if(!confirm("탈퇴하시겠습니까?")) return;
 
             fetch(contextPath + '/member/deleteMember', {
                 method: 'POST',
@@ -393,23 +347,55 @@ document.addEventListener("DOMContentLoaded", () => {
                 },
                 body: JSON.stringify({"id":sessionStorage.getItem("id")})
             })
-                .then(response => response.json())
-                .then(data => {
-                    if(data.status === 'ok'){
-                        location.href = contextPath + '/';
-                        sessionStorage.removeItem("id");
-                        sessionStorage.removeItem("boardAuth");
-                    }else{
-                        alert(data.status);
-                    }
-                })
-                .catch(error => {
-                    alert("다시 시도해주세요.");
-                });
+            .then(response => response.json())
+            .then(data => {
+                if(data.status === 'ok'){
+                    location.href = contextPath + '/';
+                    sessionStorage.removeItem("id");
+                    sessionStorage.removeItem("boardAuth");
+                }else{
+                    alert(data.status);
+                }
+            })
+            .catch(error => {
+                alert("다시 시도해주세요.");
+            });
 
 
         });
     }
+
+    if(document.querySelector("#detailMember")){
+        document.querySelector("#detailMember").addEventListener("click", e => {
+            location.href = contextPath + '/member/detailForm?id=' + sessionStorage.getItem("id");
+        });
+    }
+
+    if(document.querySelectorAll(".rows")){
+        document.querySelectorAll(".rows").forEach(row => {
+            row.addEventListener("click", () => {
+                location.href = contextPath + '/board/getPost?postNo=' + row.dataset.postNo + '&board=' + document.querySelector("#board").value;
+            });
+        });
+    }
+
+    if(document.querySelectorAll(".boardDetail")){
+        document.querySelectorAll(".boardDetail").forEach(btn => {
+            btn.style.display = (sessionStorage.getItem("id")) ? 'inline-block' : 'none';
+            btn.addEventListener("click", e => {
+                preventEvent(e);
+                const postNo = document.querySelector("tr[data-post-no]").getAttribute("data-post-no");
+                console.log(postNo);
+
+
+                if(btn.innerText === '수정') location.href = contextPath + '/board/updatePost?postNo=' + postNo;
+                else location.href = contextPath + '/board/deletePost?postNo=' + postNo;
+            });
+        })
+    }
+
+
+
 
 
 
@@ -438,18 +424,18 @@ function postJson(url, data){
         },
         body: JSON.stringify(data)
     })
-        .then(response => response.json())
-        .then(data => {
-            if(data.status === 'ok') {
-                alert(data.msg);
-            }
-            else {
-                alert(data.status);
-            }
-        })
-        .catch(error => {
-            alert("다시 시도해주세요.");  // 오류 처리
-        });
+    .then(response => response.json())
+    .then(data => {
+        if(data.status === 'ok') {
+            alert(data.msg);
+        }
+        else {
+            alert(data.status);
+        }
+    })
+    .catch(error => {
+        alert("다시 시도해주세요.");  // 오류 처리
+    });
 }
 
 function change () {
@@ -458,21 +444,75 @@ function change () {
     searchForm.submit();
 }
 
-function preventEvent(e) {
-    e.preventDefault();
-    e.stopPropagation();
-}
-
 function pageMove(pageNo) {
     if(!searchForm) return;
     searchForm.pageNo.value = pageNo; 
     searchForm.submit();
 }
 
-function formAction(formId, path){
-    console.log("b");
+function formAction(formId, path, method){
     if(!formId) return;
-    console.log("c");
     formId.action = contextPath + path;
+    formId.method = method;
+}
+
+function submitValidate(e, formName){
+    if(formName.password.value !== formName.passwordValid.value){
+        alert("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+        formName.password.focus();
+        preventEvent(e);
+        return;
+    }
+    if(!pwRegexRes || !validPwChk) {
+        alert("비밀번호는 8~12자 사이이며, 영문자, 숫자, 특수문자를 각각 1개 이상 포함해야 합니다.");
+        formName.password.focus();
+        preventEvent(e);
+        return;
+    }
+    if(!phoneRegexRes){
+        alert("010-0000-0000 형식으로 입력해주세요.");
+        formName.handphone.focus();
+        preventEvent(e);
+        return;
+    }
+    idRegexRes = false;
+    idDuplicateChk = false;
+}
+
+function validate(formName2){
+    if(formName2?.password && formName2?.passwordValid) {
+        document.querySelectorAll(".pwChk").forEach(p => {
+            p.addEventListener("input", e => {
+                document.querySelector(".pwInfo").style.display = regexNo(pwRegex, e.target.value) ? 'none' : 'block';
+                document.querySelector(".pwInfo2").style.display = (formName2.password.value === formName2.passwordValid.value) ? 'none' : 'block';
+            });
+            p.addEventListener("blur", e => {
+                if(regexNo(pwRegex, formName2.password.value) && regexNo(pwRegex, formName2.passwordValid.value)) pwRegexRes = true;
+                if(pwRegexRes === true && formName2.password.value === formName2.passwordValid.value) validPwChk = true;
+            });
+            p.addEventListener("change", e => {
+                validPwChk = false;
+                pwRegexRes = false;
+            });
+        });
+    }
+
+    if(formName2?.handphone){
+        formName2.handphone.addEventListener("input", e => {
+            if(regexNo(phoneRegex, e.target.value)) {
+                document.querySelector(".phoneInfo").style.display = 'none';
+                phoneRegexRes = true;
+            }else {
+                document.querySelector(".phoneInfo").style.display = 'block';
+                phoneRegexRes = false;
+            }
+            
+        });
+    }  
+}
+
+function preventEvent(e) {
+    e.preventDefault();
+    e.stopPropagation();
 }
 

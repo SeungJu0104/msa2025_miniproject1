@@ -34,6 +34,11 @@
 	thead, tbody{
 		max-width: 100%;
 	}
+	td{
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis; 
+	}
 	tr, th, td{
 		text-align: center;
 	}

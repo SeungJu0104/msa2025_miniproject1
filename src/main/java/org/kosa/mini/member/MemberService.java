@@ -49,8 +49,8 @@ public class MemberService {
 		return mDao.register(member);
 	}
 
-	public MemberVO getInfo(MemberVO member) {
-		return mDao.getInfo(member);
+	public MemberVO getInfo(String id) {
+		return mDao.getInfo(id);
 	}
 
 	public int updateMember(MemberVO member) {

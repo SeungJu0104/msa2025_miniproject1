@@ -11,6 +11,11 @@
 <title>게시판 목록</title>
 </head>
 <body data-context="${pageContext.request.contextPath}">
+	<c:if test="${not empty errorMsg }">
+		<script type="text/javascript">
+			alert("${errorMsg}");
+		</script>
+	</c:if>
 	<h1>게시판 목록</h1>
 	<div class="container">
 		<form name="searchForm" id="searchForm">
@@ -36,9 +41,7 @@
 		<table class="table table-striped">
 			<thead>
 			  <tr>
-			  	<th scope="col">번호</th>
-				<th scope="col">게시글 번호</th>
-				<th scope="col">게시판</th>
+				<th scope="col">번호</th>
 				<th scope="col">제목</th>
 				<th scope="col">작성자</th>
 				<th scope="col">조회수</th>
@@ -52,10 +55,8 @@
 					</tr>
 				</c:if>
 				<c:forEach items="${pageResponse.list}" var="item" varStatus="status">
-				    <tr>
+				    <tr class="rows" data-post-no="${item.postNo}">
 				    	<td id="postNum">${pageResponse.totalCount - ((pageResponse.pageNo - 1) * pageResponse.size + status.count) + 1}</td>
-				        <td>${item.postNo}</td>
-				        <td>${item.boardName}</td>
 				        <td>${item.title}</td>
 				        <td>${item.writer}</td>
 				        <td>${item.views}</td>

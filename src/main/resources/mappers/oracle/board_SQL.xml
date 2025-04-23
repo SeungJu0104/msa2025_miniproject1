@@ -5,6 +5,7 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.kosa.mini.board.BoardDAO"><!-- namespace 별칭 써 줄임말 만들기 -->
+	<!-- UPPER(P.DELETEYN) = 'N' AND UPPER(M.DELETEYN) = 'N' AND BT.BOARDNAME = #{board}  -->
 	<sql id="search">
 		UPPER(P.DELETEYN) = 'N' AND UPPER(M.DELETEYN) = 'N' AND BT.BOARDNAME = #{board}
 		<if test="searchValue != null and searchValue != ''">
@@ -39,14 +40,25 @@
 	<select id="getTotalCount" resultType="int">
 		SELECT COUNT(*)
 		FROM 
-		    TB_POST P
-			JOIN 
-			    TB_BOARDTYPE BT ON P.BOARDNO = BT.BOARDNO
-			JOIN 
-			    TB_MEMBER M ON P.MEMBERNO = M.MEMBERNO
+			<include refid="join"/>
 		WHERE 
 		     <include refid="search"/>
 	</select>
-	
+	<select id="getPost" resultType="org.kosa.mini.board.BoardVO">
+		SELECT 
+			<include refid="field1"/>
+		FROM
+			<include refid="join"/>
+		WHERE
+			<include refid="search"/> AND POSTNO = #{postNo}
+	</select>
+	<update id="addViewCnt">
+		UPDATE
+			TB_POST
+		SET
+			VIEWS = VIEWS + 1
+		WHERE
+			POSTNO = #{postNo}
+	</update>
 </mapper>
 

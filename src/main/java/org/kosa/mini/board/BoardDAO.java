@@ -9,7 +9,8 @@ import org.apache.ibatis.annotations.Mapper;
 public interface BoardDAO {
 
 	public List<BoardVO> getBoard(Map <String, Object> map);
-
 	public int getTotalCount(Map<String, Object> map);
+	public BoardVO getPost(BoardVO post);
+	public int addViewCnt(int postNo);
 
 }

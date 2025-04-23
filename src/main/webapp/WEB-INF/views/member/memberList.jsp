@@ -8,9 +8,13 @@
 <title>회원 목록</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/mini.css">
-<script src="${pageContext.request.contextPath }/resources/js/miniJs.js"></script>
 </head>
 <body data-context="${pageContext.request.contextPath}">
+	<c:if test="${not empty errorMsg }">
+	<script type="text/javascript">
+		alert("${errorMsg}");
+	</script>
+	</c:if>
 	<h1>회원 목록</h1>
 	<div class="container">
 		<form id="searchForm">
@@ -32,6 +36,7 @@
 				</div>
     		</div>
 		</form>
+		  	  
 		<table class="table table-striped">
 			<thead>
 			  <tr>
@@ -42,9 +47,9 @@
 				<th scope="col">우편번호</th>
 				<th scope="col">주소</th>
 				<th scope="col">상세 주소</th>
-				<th scope="col">가입 일시</th>
+				<th scope="col">가입일</th>
 				<th scope="col">잠금</th>
-				<th scope="col">관리 권한</th>
+				<th scope="col">권한</th>
 			  </tr>
 			</thead>
 			<tbody>
@@ -73,5 +78,6 @@
 		</table>
 		<c:import url="/WEB-INF/views/inc/pageNav.jsp" />
 	</div>
+	<script src="${pageContext.request.contextPath }/resources/js/miniJs.js"></script>
 </body>
 </html>

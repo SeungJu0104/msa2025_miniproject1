@@ -17,7 +17,7 @@ public interface MemberDAO {
 	public int lockYn(@Param("memberNo") String memberNo, @Param("lockYn") char lockYn);
 	public MemberVO getMember(MemberVO member);
 	public int register(MemberVO member);
-	public MemberVO getInfo(MemberVO member);
+	public MemberVO getInfo(@Param("id") String id);
 	public int updateMember(MemberVO member);
 	public int deleteMember(MemberVO member);
 

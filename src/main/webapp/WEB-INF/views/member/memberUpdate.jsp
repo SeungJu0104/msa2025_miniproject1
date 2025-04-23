@@ -5,11 +5,14 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>회원 정보 수정</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/mini.css">
 </head>
 <body data-context="${pageContext.request.contextPath}">
+  <script type="text/javascript">
+		alert("${errorMsg}");
+	</script>
   <h1>회원 정보 수정</h1>
   <div class="container">
     <form id="updateForm">
@@ -19,7 +22,10 @@
         </div>
         <div class="mb-3">
           <label for="password" class="form-label">비밀번호</label>
-          <input type="password" class="form-control" id="password" name="password" value="${member.password}" required>
+          <input type="password" class="form-control pwChk" id="password" name="password" placeholder="비밀번호" value="${member.password}" required>
+          <input type="password" class="form-control pwChk" id="passwordValid" placeholder="비밀번호확인" required>
+          <small class="pwInfo" style="display : none">비밀번호는 8~12자 사이이며, 영문자, 숫자, 특수문자를 각각 1개 이상 포함해야 합니다.</small>
+          <small class="pwInfo2" style="display : none">비밀번호와 비밀번호 확인이 일치하지 않습니다.</small>
         </div>
         <div class="mb-3">
           <label for="name" class="form-label">이름</label>
@@ -27,11 +33,12 @@
         </div>
         <div class="mb-3">
           <label for="handphone" class="form-label">전화번호</label>
-          <input type="tel" class="form-control" id="handphone" name="phoneNumber" value="${member.phoneNumber}" required>
+          <input type="tel" class="form-control" id="handphone" name="phoneNumber" value="${member.phoneNumber}" required maxlength="13">
+          <small class="phoneInfo" style="display : none">010-0000-0000 형식으로 입력해주세요.</small>
         </div>
         <div class="mb-3">
             <label for="post_code" class="form-label">우편번호</label>
-            <input type="text" class="form-control" id="postCode" name="postCode" value="${member.postCode}" required>
+            <input type="text" class="form-control" id="postCode" name="postCode" value="${member.postCode}" required maxlength="5">
         </div>
         <div class="mb-3">
             <label for="address" class="form-label">주소</label>
@@ -60,9 +67,8 @@
         </div> -->
         <div class="d-flex flex-column align-items-center gap-2 mt-4">
           <button type="submit" class="btn btn-primary col-6" id="memberUpdate">전송</button>
-          <button type="button" class="btn btn-outline-danger col-6" id="memberDel">삭제</button>
+          <button type="button" class="btn btn-outline-danger col-6" id="memberDel">탈퇴</button>
         </div>
-
     </form>
   </div>
   <script src="${pageContext.request.contextPath }/resources/js/miniJs.js"></script>

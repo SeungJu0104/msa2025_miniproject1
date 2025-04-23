@@ -16,13 +16,13 @@
 				ID
 			</when>
 			<otherwise>
-				ID, PASSWORD, LOCKYN, LOGINFAILURE, BOARDAUTH
+				PASSWORD, NAME, PHONENUMBER, POSTCODE, ADDRESS, DETAILADDRESS
 			</otherwise>			
 		</choose>
 	</sql>
 	<select id="login" resultType="org.kosa.mini.member.MemberVO">
 		SELECT 
-			<include refid = "field1"/>
+			ID, PASSWORD, LOCKYN, LOGINFAILURE, BOARDAUTH
 		FROM 
 			TB_MEMBER
 		WHERE 
@@ -66,7 +66,7 @@
 		WHERE
 			MEMBERNO=#{memberNo} AND DELETEYN = 'N'
 	</update>
-	<select id="getTotalCount" resultType="int">
+	<select id="getTotalCount">
 		SELECT 
 			COUNT(*)
 		FROM 
@@ -75,5 +75,58 @@
 			DELETEYN = 'N'
 			<include refid="search"/>
 	</select>
+	<select id="getMember" resultType="org.kosa.mini.member.MemberVO">
+		SELECT
+			<include refid = "field1"/>
+		FROM
+			TB_MEMBER
+		WHERE
+			DELETEYN = 'N' AND ID = #{id}
+	</select>
+	<insert id="register">
+		INSERT INTO 
+			TB_MEMBER
+		VALUES (
+			SEQ_TB_MEMBER.NEXTVAL,
+			#{id},
+			#{password},
+			#{name},
+			#{phoneNumber},
+			#{postCode},
+			#{address},
+			#{detailAddress},
+			SYSDATE,
+			'N',
+			NULL,
+			'N',
+			0,
+			'N',
+			#{birthDate}
+		)
+	</insert>
+	<select id="getInfo" resultType="org.kosa.mini.member.MemberVO">
+		SELECT 
+			ID, PASSWORD, NAME, PHONENUMBER, POSTCODE, ADDRESS, DETAILADDRESS
+		FROM
+			TB_MEMBER
+		WHERE
+			DELETEYN = 'N' AND ID = #{id}
+	</select>
+	<update id="updateMember">
+		UPDATE
+			TB_MEMBER
+		SET
+			PASSWORD = #{password} , NAME = #{name} , POSTCODE = #{postCode} , ADDRESS = #{address} , DETAILADDRESS = #{detailAddress}
+		WHERE
+			DELETEYN = 'N' AND ID = #{id}
+	</update>
+	<update id="deleteMember">
+		UPDATE
+			TB_MEMBER
+		SET
+			DELETEYN = 'Y', DELETEDAT = SYSDATE
+		WHERE
+			ID = #{id}
+	</update>
 </mapper>
 

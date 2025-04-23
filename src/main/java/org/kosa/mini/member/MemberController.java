@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.kosa.mini.board.BoardController;
 import org.kosa.mini.util.PageResponseVO;
 import org.kosa.mini.util.Util;
@@ -18,11 +20,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Controller
 @RequestMapping("member")
 public class MemberController {
 	@Autowired
 	MemberService ms;
+	
+	static String idRegex = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,10}$";
+	static String pwRegex = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?])[A-Za-z\\d!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?]{8,12}$";
 	
 	@GetMapping("loginForm")
 	public String loginForm() {
@@ -36,8 +44,7 @@ public class MemberController {
 		String key = "status", value = "아이디, 비밀번호를 확인해주세요.";
 //		아이디, 비밀번호 로그인 검증
 //		if(member.getId() == null || member.getPassword() == null 
-//			|| !Validate.isValid("^(?=.*[A-Za-z])(?=.*\\\\d)[A-Za-z\\\\d]{8,10}$", member.getId()) || 
-//			!Validate.isValid("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?])[A-Za-z\\d!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?]{8,12}$", member.getPassword())) 
+//			|| !Validate.isValid(idRegex, member.getId()) || !Validate.isValid(pwRegex, member.getPassword())) 
 //			return putMsg(key, value, map);
 
 		MemberVO dbMember = ms.login(member);
@@ -65,18 +72,30 @@ public class MemberController {
 	@ResponseBody
 	public Map<String, Object> idDupChk(@RequestBody MemberVO member){
 		Map<String, Object> map = new HashMap<String, Object>();
-		//if(member.getId() == null || !Validate.isValid("^(?=.*[A-Za-z])(?=.*\\\\d)[A-Za-z\\\\d]{8,10}$", member.getId())) return putMsg("status", "아이디는 8자이며, 영문자와 숫자만 포함해야 합니다.", map);
-		MemberVO dbMember = ms.login(member);
-		if(dbMember != null) {
+		if(member == null || member.getId() == null || !Validate.isValid(idRegex, member.getId())) return putMsg("status", "아이디는 8자이며, 영문자와 숫자만 포함해야 합니다.", map);
+		if(ms.getMember(member) != null) {
 			map.put("msg", "해당 아이디는 사용 불가합니다.");
 			return putMsg("status", "ok", map);
 		}
-		else return putMsg("status", "해당 아이디는 사용 가능합니다.", map);
+		return putMsg("status", "해당 아이디는 사용 가능합니다.", map);
+	
 	}
 	
 	@GetMapping("registerForm")
-	public String updateForm() {
+	public String registerForm() {
 		return "/member/memberRegister";
+	}
+	
+	@PostMapping("register")
+	@ResponseBody
+	public Map<String, Object> register(@RequestBody MemberVO member){
+		Map<String, Object> map = new HashMap<String, Object>();
+		log.info(member.toString());
+		if(ms.register(member) == 1) {
+			map.put("msg", "회원가입을 축하드립니다. 로그인해주세요.");
+			return putMsg("status", "ok", map);
+		}
+		return putMsg("status", "다시 시도해주세요.", map);
 	}
 	
 	@GetMapping("memberList")
@@ -90,6 +109,11 @@ public class MemberController {
 		return "/member/memberList";
 	}
 	
+	@GetMapping("updateForm")
+	public String updateForm() {
+		return "/member/memberUpdate";
+	}
+	
 	@PostMapping("lockYn")
 	@ResponseBody
 	public Map<String, Object> lockYn(@RequestBody Map<String, String> req) {
@@ -98,8 +122,47 @@ public class MemberController {
 		return putMsg("status", "다시 시도해주세요.", map);
 	}
 	
-
+	@PostMapping("getMember")
+	@ResponseBody
+	public Map<String, Object> getMember(HttpSession session, @RequestBody MemberVO member){
+		Map<String, Object> map = new HashMap<String, Object>();
+		if(member == null || member.getId().isBlank()) return putMsg("status", "다시 시도해주세요.", map);
+		MemberVO dbMember = ms.getInfo(member);
+		if(dbMember != null) {
+			session.setAttribute("member", dbMember);
+			map.put("status", "ok");
+			return map;
+		}
+		return putMsg("status", "다시 시도해주세요.", map);
+	}
 	
+	@PostMapping("updateMember")
+	@ResponseBody
+	public Map<String, Object> updateMember(@RequestBody MemberVO member, HttpSession session){
+		Map<String, Object> map = new HashMap<String, Object>();
+		System.out.println(member.toString());
+		if(member == null || member.getId().isBlank()) return putMsg("status", "다시 시도해주세요.", map);
+		if(ms.updateMember(member) == 1) {
+			map.put("status", "ok");
+			session.setAttribute("member", ms.getInfo(member));
+			return map;
+		}
+		return putMsg("status", "다시 시도해주세요.", map);
+	}
+	
+	@PostMapping("deleteMember")
+	@ResponseBody
+	public Map<String, Object> deleteMember(@RequestBody MemberVO member, HttpSession session){
+		Map<String, Object> map = new HashMap<String, Object>();
+		System.out.println(member.toString());
+		if(member == null || member.getId().isBlank()) return putMsg("status", "다시 시도해주세요.", map);
+		if(ms.deleteMember(member) == 1) {
+			map.put("status", "ok");
+			session.removeAttribute("member");
+			return map;
+		}
+		return putMsg("status", "다시 시도해주세요.", map);
+	}
 	
 	public static Map <String, Object> putMsg(String key, String value, Map<String, Object> map){
 		map.put(key, value);

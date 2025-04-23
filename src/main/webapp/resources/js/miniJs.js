@@ -6,16 +6,22 @@ document.addEventListener("DOMContentLoaded", () => {
     const navItems = document.querySelectorAll("#nav-items .nav-item");
     const pageItems = document.querySelectorAll("#page-items .page-item");
     const size = document.querySelector("#size");
-    const searchValue = document.querySelector("#searchValue");
     const searchForm = document.querySelector("#searchForm");
     const goLogin = document.querySelector("#goLogin");
     const loginForm = document.querySelector("#loginForm");
     const goRegister = document.querySelector("#goRegister");
     const memberForm = document.querySelector("#memberForm");
     const memberList = document.getElementById("memberList");
+    const updateForm = document.querySelector("#updateForm");
     const idRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,10}$/;
     const pwRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])[A-Za-z\d!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{8,12}$/;
-    
+    const phoneRegex = /^010-\d{4}-\d{4}$/;
+    let validPwChk = false;
+    let pwRegexRes = false;
+    let idRegexRes = false;
+    let phoneRegexRes = false;
+    let idDuplicateChk = false;
+
     console.log(contextPath);
 
     const pathMap = {
@@ -92,7 +98,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if(document.querySelector("#updateMember")){
         document.querySelector("#updateMember").addEventListener("click", e => {
-            location.href = contextPath + '/member/updateForm';
+            fetch(contextPath + '/member/getMember', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8' 
+                },
+                body: JSON.stringify({'id': sessionStorage.getItem("id")})
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if(data.status === 'ok'){
+                        location.href = contextPath + '/member/updateForm';
+                    }else {
+                        alert(data.status);
+                        location.href = contextPath + '/';
+                    }
+                })
+                .catch(error => {
+                    alert("다시 시도해주세요.");
+                    location.href = contextPath + '/';
+                });
+        });
+    }
+
+    if(document.querySelector("#goRegister")){
+        document.querySelector("#goRegister").addEventListener("click", e => {
+            location.href = contextPath + '/member/registerForm';
         });
     }
 
@@ -101,7 +132,7 @@ document.addEventListener("DOMContentLoaded", () => {
             preventEvent(e);
 
             // 아이디, 비밀번호 로그인 정규식
-            // if(regex(idRegex, loginForm.login_id.value, "아이디는 8자이며, 영문자와 숫자만 포함해야 합니다.")) return;
+            // if(regex(idRegex, loginForm.login_id.value, "아이디는 8~10자 사이이며, 영문자와 숫자만 포함해야 합니다.")) return;
             // if(regex(pwRegex, loginForm.login_password.value, "비밀번호는 8~12자 사이이며, 영문자, 숫자, 특수문자를 각각 1개 이상 포함해야 합니다.")) return;
         
             fetch(contextPath + '/member/login', {
@@ -129,21 +160,155 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    if(memberForm && memberForm.userid){
-        memberForm.userid.addEventListener("blur", e => {
-            if(regex(idRegex, memberForm.userid.value, "아이디는 8자이며, 영문자와 숫자만 포함해야 합니다.")) {
-                memberForm.userid.value = '';
+    if(memberForm){
+        console.log("a");
+        memberForm.addEventListener("submit", e => {
+            preventEvent(e);
+            console.log("b");
+            if(!idRegexRes) {
+                window.alert("아이디는 8~10자 사이이며, 영문자와 숫자만 포함해야 합니다.");
                 memberForm.userid.focus();
                 return;
             }
+            console.log("c");
+            if(!idDuplicateChk){
+                console.log("id" + idDuplicateChk);
+                alert("아이디 중복확인을 해주세요.");
+                return;
+            }
+            console.log("d");
+            if(!pwRegexRes || !validPwChk) {
+                alert("비밀번호는 8~12자 사이이며, 영문자, 숫자, 특수문자를 각각 1개 이상 포함해야 합니다.");
+                memberForm.password.focus();
+                return;
+            }
+            console.log("e");
+            if(!phoneRegexRes){
+                alert("010-0000-0000 형식으로 입력해주세요.");
+                memberForm.handphone.focus();
+                return;
+            }
+            console.log("f");
+            const data = {
+                "id" : memberForm.userid.value,
+                "password" : memberForm.password.value,
+                "name" : document.querySelector("#name").value,
+                "phoneNumber" : memberForm.phoneNumber.value,
+                "postCode" : memberForm.postCode.value,
+                "address" : memberForm.address.value,
+                "detailAddress" : memberForm.detailAddress.value,
+                "birthDate" : memberForm.birthDate.value
+            }
+
+            console.log(data);
+
+            fetch(contextPath + '/member/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8' 
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if(data.status === 'ok') {
+                        console.log("ok");
+                        alert(data.msg);
+                    }
+                    else {
+                        console.log("not ok");
+                        alert(data.status);
+                    }
+                })
+                .catch(error => {
+                    alert("다시 시도해주세요.");  // 오류 처리
+                });
+
         });
     }
-//    if(regex(pwRegex, memberForm.password.value, "비밀번호는 8~12자 사이이며, 영문자, 숫자, 특수문자를 각각 1개 이상 포함해야 합니다.")) return;
-    if(memberForm && memberForm.idDupChk){
+
+    if(memberForm?.userid){
+        memberForm.userid.addEventListener("input", e => {
+            idDuplicateChk = false;
+            console.log("id" + idDuplicateChk);
+            if(regexNo(idRegex, e.target.value)) {
+                document.querySelector("#idInfo").style.display = 'none';
+                idRegexRes = true;
+                console.log("idRegexRes : " + idRegexRes);
+            }else {
+                document.querySelector("#idInfo").style.display = 'block';
+                idRegexRes = false;
+                console.log("idRegexRes : " + idRegexRes);
+            }
+        });
+    }
+
+    if(memberForm?.idDupChk){
         memberForm.idDupChk.addEventListener("click", e => {
             preventEvent(e);
-            postJson(contextPath + '/member/idDupChk', {'id' : memberForm.userid.value}); 
+            fetch(contextPath + '/member/idDupChk', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8' 
+                },
+                body: JSON.stringify({'id' : memberForm.userid.value})
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if(data.status === 'ok') {
+                        alert(data.msg);
+                        idDuplicateChk = true;
+                        console.log("id" + idDuplicateChk);
+                    }
+                    else {
+                        alert(data.status);
+                    }
+                })
+                .catch(error => {
+                    alert("다시 시도해주세요.");  // 오류 처리
+                });
         });
+    }
+
+    if(memberForm?.password && memberForm?.passwordValid) {
+        document.querySelectorAll(".pwChk").forEach(p => {
+            p.addEventListener("input", e => {
+                document.querySelector("#pwInfo").style.display = regexNo(pwRegex, e.target.value) ? 'none' : 'block';
+            });
+
+            p.addEventListener("blur", e => {
+                if(regexNo(pwRegex, memberForm.password.value) && regexNo(pwRegex, memberForm.passwordValid.value)) pwRegexRes = true;
+                if(pwRegexRes === true && memberForm.password.value === memberForm.passwordValid.value) validPwChk = true;
+                console.log("pwRegexRes : " + pwRegexRes);
+                console.log("validPwChk : " + validPwChk);
+            });
+
+            p.addEventListener("change", e => {
+                validPwChk = false;
+                pwRegexRes = false;
+                console.log("pwRegexRes : " + pwRegexRes);
+                console.log("validPwChk : " + validPwChk);
+            });
+        });
+    }
+
+    if(memberForm?.handphone){
+        memberForm.handphone.addEventListener("input", e => {
+            if(regexNo(phoneRegex, e.target.value)) {
+                document.querySelector("#phoneInfo").style.display = 'none';
+                phoneRegexRes = true;
+                console.log("phoneRegexRes : " + phoneRegexRes);
+            }else {
+                document.querySelector("#phoneInfo").style.display = 'block';
+                phoneRegexRes = false;
+                console.log("phoneRegexRes : " + phoneRegexRes);
+            }
+            
+        });
+    }
+
+    if(memberForm?.birthDate){
+        memberForm.birthDate.max = new Date().toISOString().split("T")[0];
     }
 
     if(goRegister){
@@ -155,9 +320,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     document.querySelectorAll('.lockYn').forEach(function(checkbox) {
-        checkbox.addEventListener('click', function() {
-            //const isChecked = checkbox.checked;
-            console.log(contextPath + '/member/lockYn');
+        checkbox.addEventListener('click', () => {
             fetch(contextPath + '/member/lockYn', {
                 method: 'POST',
                 headers: {
@@ -170,10 +333,7 @@ document.addEventListener("DOMContentLoaded", () => {
             })
             .then(response => response.json())
             .then(data => {
-                if (data.status === 'ok') {
-
-                } else {
-                    console.log("a");
+                if (data.status !== 'ok') {
                     alert(data.status);
                     checkbox.checked = !checkbox.checked;
                 }
@@ -184,36 +344,72 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    if(document.querySelector("#updateForm")){
-        document.querySelector("#updateForm").addEventListener("submit", e => {
+    if(updateForm){
+
+        updateForm.addEventListener("submit", e => {
             preventEvent(e);
 
-            fetch('', {
+            const data = {
+                "id":updateForm.id.value,
+                "password":updateForm.password.value,
+                "name":document.querySelector("#name").value,
+                "phoneNumber":updateForm.handphone.value,
+                "postCode":updateForm.postCode.value,
+                "address":updateForm.address.value,
+                "detailAddress":updateForm.detailAddress.value
+            }
+
+            fetch(contextPath + '/member/updateMember', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json; charset=utf-8' 
                 },
-                body: JSON.stringify({"id" : sessionStorage.getItem("id")})
+                body: JSON.stringify(data)
             })
                 .then(response => response.json())
                 .then(data => {
-                    if(data.status === 'ok') {
-                        alert(data.msg);
-                        locatioin.href = contextPath + '/'
-                    }
-                    else {
-                        console.log("not ok");
+                    if(data.status === 'ok'){
+                        location.href = contextPath + '/';
+                    }else{
                         alert(data.status);
                     }
                 })
                 .catch(error => {
-                    alert("다시 시도해주세요.");  // 오류 처리
+                    alert("다시 시도해주세요.");
                 });
             
         });
     }
 
+    if(document.querySelector("#memberDel")){
+        document.querySelector("#memberDel").addEventListener("click", e => {
 
+            if(!confirm("삭제하시겠습니까?")) return;
+
+            fetch(contextPath + '/member/deleteMember', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8' 
+                },
+                body: JSON.stringify({"id":sessionStorage.getItem("id")})
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if(data.status === 'ok'){
+                        location.href = contextPath + '/';
+                        sessionStorage.removeItem("id");
+                        sessionStorage.removeItem("boardAuth");
+                    }else{
+                        alert(data.status);
+                    }
+                })
+                .catch(error => {
+                    alert("다시 시도해주세요.");
+                });
+
+
+        });
+    }
 
 
 
@@ -223,11 +419,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function regex (regex, val, msg){
     if (!regex.test(val)) {
-        console.log("b");
         alert(msg);
         return true;
     }
     return false;
+}
+
+function regexNo(regex, val){
+    if(!regex.test(val)) return false;
+    return true;
 }
 
 function postJson(url, data){
@@ -241,11 +441,9 @@ function postJson(url, data){
         .then(response => response.json())
         .then(data => {
             if(data.status === 'ok') {
-                console.log("ok");
                 alert(data.msg);
             }
             else {
-                console.log("not ok");
                 alert(data.status);
             }
         })
@@ -269,5 +467,12 @@ function pageMove(pageNo) {
     if(!searchForm) return;
     searchForm.pageNo.value = pageNo; 
     searchForm.submit();
+}
+
+function formAction(formId, path){
+    console.log("b");
+    if(!formId) return;
+    console.log("c");
+    formId.action = contextPath + path;
 }
 

@@ -39,6 +39,27 @@ public class MemberService {
 		System.out.println(map.toString());
 		
 		return new PageResponseVO<MemberVO>(pageNo, mDao.getMemberList(map), mDao.getTotalCount(map), size, parserPage);
-	}	
+	}
+
+	public MemberVO getMember(MemberVO member) {
+		return mDao.getMember(member);
+	}
+
+	public int register(MemberVO member) {
+		return mDao.register(member);
+	}
+
+	public MemberVO getInfo(MemberVO member) {
+		return mDao.getInfo(member);
+	}
+
+	public int updateMember(MemberVO member) {
+		return mDao.updateMember(member);
+	}
+
+	public int deleteMember(MemberVO member) {
+		return mDao.deleteMember(member);
+	}
+	
 
 }

@@ -22,5 +22,6 @@ public class MemberVO {
 	private int loginFailure;
 	private char boardAuth;
 	private String searchValue;
+	private Date birthDate;
 
 }

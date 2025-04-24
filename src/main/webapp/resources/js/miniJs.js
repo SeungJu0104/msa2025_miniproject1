@@ -1,3 +1,4 @@
+
 let validPwChk = false;
 let pwRegexRes = false;
 let idRegexRes = false;
@@ -53,6 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // ?. => 옵셔널 체이닝 => 앞의 값이 null 이거나 undefined인 경우 에러내지 않고, undefined를 반환시켜준다.
+    
     if (sessionStorage.getItem('id') != null) {
         document.querySelectorAll(".nologin").forEach(btn => btn?.style && (btn.style.display = 'none'));
         document.querySelectorAll(".login").forEach(btn => btn?.style && (btn.style.display = 'inline-block'));
@@ -66,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }else{
         memberList?.style && (memberList.style.display = 'none');
     }
-
+	
     if(searchForm){
         const path = ((searchForm.type.value == 'member') ? "/member/memberList" : "/board/getBoard");
         formAction(searchForm, path, 'Get');
@@ -385,16 +387,26 @@ document.addEventListener("DOMContentLoaded", () => {
             btn.addEventListener("click", e => {
                 preventEvent(e);
                 const postNo = document.querySelector("tr[data-post-no]").getAttribute("data-post-no");
-                console.log(postNo);
-
-
-                if(btn.innerText === '수정') location.href = contextPath + '/board/updatePost?postNo=' + postNo;
+                alert("a");
+                if(btn.innerText === '수정') location.href = contextPath + '/board/updateForm?postNo=' + postNo + '&board=' + document.querySelector("tr[data-board-name]").getAttribute("data-board-name");
                 else location.href = contextPath + '/board/deletePost?postNo=' + postNo;
             });
         })
     }
 
-
+    if(document.querySelector("#updatePost")){
+        const form = document.querySelector("#updatePost");
+        formAction(form, '/board/updatePost', 'post');
+        form.addEventListener("click", e => {
+            if(form.postTitle.value === null || form.postTitle.value === undefined 
+                || form.postWriter.value === null || form.postWriter.value === undefined
+                || form.postContent.value === null || form.postContent.value === undefined){
+                    preventEvent(e);
+                    alert("값을 입력해주세요.");
+                    return;
+            }
+        });
+    }
 
 
 

@@ -10,9 +10,11 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/mini.css">
 </head>
 <body data-context="${pageContext.request.contextPath}">
+	<c:if test="${not empty errorMsg }">
 	<script type="text/javascript">
 		alert("${errorMsg}");
 	</script>
+	</c:if>
 	<h1>회원 상세보기</h1>
 	<div class="container">
 		<table class="table table-striped">

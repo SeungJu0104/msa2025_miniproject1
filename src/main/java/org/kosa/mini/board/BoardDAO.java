@@ -12,5 +12,6 @@ public interface BoardDAO {
 	public int getTotalCount(Map<String, Object> map);
 	public BoardVO getPost(BoardVO post);
 	public int addViewCnt(int postNo);
+	public int updatePost(BoardVO post);
 
 }

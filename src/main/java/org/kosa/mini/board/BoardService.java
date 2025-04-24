@@ -20,7 +20,7 @@ public class BoardService {
 		map.put("start", (pageNo-1) * size + 1);
 		map.put("end", pageNo * size);
 		map.put("searchValue", searchValue);
-		
+		System.out.println(board);
 		return new PageResponseVO<BoardVO>(board, pageNo, bDao.getBoard(map), bDao.getTotalCount(map), size, parserPage);
 	}
 
@@ -30,6 +30,10 @@ public class BoardService {
 
 	public int addViewCnt(int postNo) {
 		return bDao.addViewCnt(postNo);
+	}
+
+	public int updatePost(BoardVO post) {
+		return bDao.updatePost(post);
 	}
 
 }

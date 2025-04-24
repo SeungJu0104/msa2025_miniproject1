@@ -5,7 +5,6 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.kosa.mini.board.BoardDAO"><!-- namespace 별칭 써 줄임말 만들기 -->
-	<!-- UPPER(P.DELETEYN) = 'N' AND UPPER(M.DELETEYN) = 'N' AND BT.BOARDNAME = #{board}  -->
 	<sql id="search">
 		UPPER(P.DELETEYN) = 'N' AND UPPER(M.DELETEYN) = 'N' AND BT.BOARDNAME = #{board}
 		<if test="searchValue != null and searchValue != ''">
@@ -57,6 +56,14 @@
 			TB_POST
 		SET
 			VIEWS = VIEWS + 1
+		WHERE
+			POSTNO = #{postNo}
+	</update>
+	<update id="updatePost">
+		UPDATE
+			TB_POST
+		SET
+			TITLE = #{title}, WRITER = #{writer}, CONTENT = #{content}
 		WHERE
 			POSTNO = #{postNo}
 	</update>

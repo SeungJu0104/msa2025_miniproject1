@@ -60,13 +60,10 @@ public class MemberController {
 			ms.updateFailure(dbMember);
 			return putMsg(key, value, map);
 		}
-
 		map.put(key, "ok");
 		map.put("id", dbMember.getId());
 		map.put("boardAuth", Character.toUpperCase(dbMember.getBoardAuth()));
-
 		return map;
-		
 	}
 	
 	@PostMapping("idDupChk")
@@ -163,7 +160,6 @@ public class MemberController {
 			return errorMsg(rd);
 			//return "redirect:/";
 		}
-
 		if(ms.updateMember(member) == 1) return "redirect:/";
 		return errorMsg(rd);
 		//return "redirect:/";

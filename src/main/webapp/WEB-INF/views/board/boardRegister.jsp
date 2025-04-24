@@ -12,6 +12,11 @@
 <script src="${PageContext.request.pageContext }/resources/js/miniJs.js"></script>
 </head>
 <body data-context="${pageContext.request.contextPath}">
+    <c:if test="${not empty errorMsg }">
+        <script type="text/javascript">
+            alert("${errorMsg}");
+        </script>
+        </c:if>
     <h1>게시글 등록</h1>
     <div class="container">
         <form action="" method="post">

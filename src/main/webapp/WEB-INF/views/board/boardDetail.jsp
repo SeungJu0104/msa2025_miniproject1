@@ -11,6 +11,11 @@
 <title>게시글</title>
 </head>
 <body data-context="${pageContext.request.contextPath}">
+	<c:if test="${not empty errorMsg }">
+	<script type="text/javascript">
+		alert("${errorMsg}");
+	</script>
+	</c:if>
 	<h1>게시글</h1>
 	<div class="container">
 		<table class="table table-striped-columns">
@@ -19,7 +24,7 @@
 				  <td>게시글 번호</td>
 				  <td>${post.postNo}</td>
 				</tr>
-				<tr>
+				<tr data-board-name="${post.boardName}">
 				  <td>게시판 종류</td>
 				  <td>${post.boardName}</td>
 				</tr>
@@ -47,8 +52,8 @@
 			${post.content}
 		</div>
 		<div class="d-flex flex-column align-items-center gap-2 mt-4">
-			<button class="btn btn-primary col-6 boardDetail" id="updatePost">수정</button>
-			<button class="btn btn-primary col-6 boardDetail" id="deletePost">삭제</button>
+			<button class="btn btn-primary col-6 boardDetail">수정</button>
+			<button class="btn btn-primary col-6 boardDetail">삭제</button>
 		</div>
 	</div>
 	<script src="${pageContext.request.contextPath }/resources/js/miniJs.js"></script>

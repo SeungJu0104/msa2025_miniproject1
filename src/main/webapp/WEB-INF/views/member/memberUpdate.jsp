@@ -10,9 +10,11 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/mini.css">
 </head>
 <body data-context="${pageContext.request.contextPath}">
-  <script type="text/javascript">
+	<c:if test="${not empty errorMsg }">
+	<script type="text/javascript">
 		alert("${errorMsg}");
 	</script>
+	</c:if>
   <h1>회원 정보 수정</h1>
   <div class="container">
     <form id="updateForm">

@@ -10,8 +10,16 @@
 <title>게시글</title>
 </head>
 <body data-context="${pageContext.request.contextPath}">
+	<c:if test="${not empty errorMsg }">
+	<script type="text/javascript">
+		alert("${errorMsg}");
+	</script>
+	</c:if>
 	<h1>게시글</h1>
 	<div class="container">
+		<form id="updatePost">
+			<input type="hidden" name="board" value="${post.boardName}">
+			<input type="hidden" name="postNo" value="${post.postNo}">
 		<table class="table table-striped-columns">
 			<tbody>
 				<tr>
@@ -24,11 +32,11 @@
 				</tr>
 				<tr>
 				  <td>제목</td>
-				  <td><input value="${post.title}"></td>
+				  <td><input name="title" id="postTitle" value="${post.title}"></td>
 				</tr>
 				<tr>
 				  <td>작성자</td>
-				  <td><input value="${post.writer}"></td>
+				  <td><input name="writer" id="postWriter" value="${post.writer}"></td>
 				</tr>
 				<tr>
 				  <td>조회수</td>
@@ -41,13 +49,14 @@
 			  </tbody>
 		</table>
 		
-		<p>내용</p>
-		<div id="boardDetail_content">
-			${post.content}
-		</div>
+		<div class="mb-3">
+			<label for="exampleFormControlTextarea1" class="form-label">내용</label>
+			<textarea class="form-control" id="exampleFormControlTextarea1" rows="10" id="postContent" name="content">${post.content}</textarea>
+		  </div>
 		<div class="d-flex flex-column align-items-center gap-2 mt-4">
-			<button class="btn btn-primary col-6" id="">수정</button>
+			<button class="btn btn-primary col-6" type="submit">수정</button>
 		</div>
+		</form>
 	</div>
 <script src="${pageContext.request.contextPath}/resources/js/miniJs.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>

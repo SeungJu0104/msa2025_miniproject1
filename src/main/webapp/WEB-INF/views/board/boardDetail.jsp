@@ -32,9 +32,9 @@
 				  <td>제목</td>
 				  <td>${post.title}</td>
 				</tr>
-				<tr>
+				<tr data-post-id="${post.id}">
 				  <td>작성자</td>
-				  <td>${post.writer}</td>
+				  <td>${post.id}</td>
 				</tr>
 				<tr>
 				  <td>조회수</td>
@@ -51,9 +51,11 @@
 		<div id="boardDetail_content">
 			${post.content}
 		</div>
-		<div class="d-flex flex-column align-items-center gap-2 mt-4">
-			<button class="btn btn-primary col-6 boardDetail">수정</button>
-			<button class="btn btn-primary col-6 boardDetail">삭제</button>
+		<div id="boardUCBtn">
+		<div class="d-flex flex-column align-items-center gap-2 mt-4" >
+			<button class="btn btn-primary col-6 boardDetail ">수정</button>
+			<button class="btn btn-outline-danger col-6 boardDetail ">삭제</button>
+		</div>
 		</div>
 	</div>
 	<script src="${pageContext.request.contextPath }/resources/js/miniJs.js"></script>

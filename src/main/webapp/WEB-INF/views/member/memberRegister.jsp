@@ -77,7 +77,9 @@
           <label for="running">운동</label>
         </div>
          -->
-        <button type="submit" class="btn btn-primary col-6" id="memberRegister">전송</button>
+        <div class="d-flex flex-column align-items-center gap-2 mt-4">
+          <button type="submit" class="btn btn-primary col-6" id="memberRegister">전송</button>
+        </div>
     </form>
     <script src="${pageContext.request.contextPath }/resources/js/miniJs.js"></script>
   </div>

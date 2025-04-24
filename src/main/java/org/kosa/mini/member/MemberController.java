@@ -1,13 +1,10 @@
 package org.kosa.mini.member;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
-import org.kosa.mini.board.BoardController;
-import org.kosa.mini.util.PageResponseVO;
 import org.kosa.mini.util.Util;
 import org.kosa.mini.util.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +29,9 @@ public class MemberController {
 	
 	private String idRegex = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,10}$";
 	private String pwRegex = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?])[A-Za-z\\d!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?]{8,12}$";
+	private String parserPage = "5"; // 페이징 개수 크기는 일단 컨트롤러에서 하드 코딩으로 전달.
+	private int sizeDefaultVal = 10, pageNoDefaultVal = 1, parserDefaultVal = 5;
+	
 	
 	@GetMapping("loginForm")
 	public String loginForm() {
@@ -43,10 +43,10 @@ public class MemberController {
 	public Map <String, Object> login(@RequestBody MemberVO member) {
 		Map <String, Object> map = new HashMap<String, Object>();
 		String key = "status", value = "아이디, 비밀번호를 확인해주세요.";
-//		아이디, 비밀번호 로그인 검증
-//		if(member.getId() == null || member.getPassword() == null 
-//			|| !Validate.isValid(idRegex, member.getId()) || !Validate.isValid(pwRegex, member.getPassword())) 
-//			return putMsg(key, value, map);
+//		아이디, 비밀번호 검증
+		if(member.getId() == null || member.getPassword() == null 
+			|| !Validate.isValid(idRegex, member.getId()) || !Validate.isValid(pwRegex, member.getPassword())) 
+			return putMsg(key, value, map);
 
 		MemberVO dbMember = ms.login(member);
 
@@ -70,7 +70,7 @@ public class MemberController {
 	@ResponseBody
 	public Map<String, Object> idDupChk(@RequestBody MemberVO member){
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(member == null || member.getId() == null || !Validate.isValid(idRegex, member.getId())) return putMsg("status", "아이디는 8자이며, 영문자와 숫자만 포함해야 합니다.", map);
+		if(member == null || member.getId() == null || !Validate.isValid(idRegex, member.getId())) return putMsg("status", "아이디는 8~10자이며, 영문자와 숫자만 포함해야 합니다.", map);
 		if(ms.getMember(member) != null) {
 			map.put("msg", "해당 아이디는 사용 불가합니다.");
 			return putMsg("status", "ok", map);
@@ -87,12 +87,13 @@ public class MemberController {
 	@PostMapping("register")
 	public String register(MemberVO member, RedirectAttributes rd){
 		if(ms.register(member) == 1) {
-			//rd.addAttribute("errorMsg", "회원가입을 축하드립니다. 로그인해주세요.");
-			return errorMsg(rd);
-			//return "redirect:/";
+			rd.addAttribute("errorMsg", "회원가입을 축하드립니다. 로그인해주세요.");
+			return "redirect:/";
 		}
 		rd.addAttribute("errorMsg", "다시 시도해주세요.");
 		return "redirect:/registerForm";
+		
+//		form 대신 fetch를 이용한 방식
 //		Map<String, Object> map = new HashMap<String, Object>();
 //		log.info(member.toString());
 //		if(ms.register(member) == 1) {
@@ -104,10 +105,6 @@ public class MemberController {
 	
 	@GetMapping("memberList")
 	public String getMemberList(Model model, String searchValue, String pageNo, String size) {
-		String parserPage = "5"; // 일단 컨트롤러에서 하드 코딩으로 값 전달.
-		int sizeDefaultVal = 10;
-		int pageNoDefaultVal = 1;
-		int parserDefaultVal = 5;
 		model.addAttribute("pageResponse", ms.getMemberList(searchValue, Util.parseInt(pageNo, pageNoDefaultVal), Util.parseInt(size, sizeDefaultVal), Util.parseInt(parserPage, parserDefaultVal)));
 		return "/member/memberList";
 	}
@@ -128,20 +125,16 @@ public class MemberController {
 	@GetMapping("getMember")
 	public String getMember(@RequestParam String id, Model model, RedirectAttributes rd){
 		if(id.isBlank()) {
-			//rd.addFlashAttribute("errorMsg", "다시 시도해주세요.");
 			return errorMsg(rd);
-			//return "redirect:/";
 		}
 		MemberVO dbMember = ms.getInfo(id);
 		if(dbMember == null) {
-			//rd.addFlashAttribute("errorMsg", "다시 시도해주세요.");
 			return errorMsg(rd);
-			//return "redirect:/";
 		}
 		model.addAttribute("member", dbMember);
 		return "/member/memberUpdate";
 		
-		
+//		form 대신 fetch를 이용한 방식		
 //		Map<String, Object> map = new HashMap<String, Object>();
 //		if(member == null || member.getId().isBlank()) return putMsg("status", "다시 시도해주세요.", map);
 //		MemberVO dbMember = ms.getInfo(member);
@@ -158,12 +151,11 @@ public class MemberController {
 		System.out.println("a");
 		if(member == null) {
 			return errorMsg(rd);
-			//return "redirect:/";
 		}
 		if(ms.updateMember(member) == 1) return "redirect:/";
 		return errorMsg(rd);
-		//return "redirect:/";
-		
+
+//		form 대신 fetch를 이용한 방식
 //		Map<String, Object> map = new HashMap<String, Object>();
 //		System.out.println(member.toString());
 //		if(member == null || member.getId().isBlank()) model.addAttribute("errorMsg", "다시 시도해주세요.");
@@ -190,12 +182,10 @@ public class MemberController {
 	public String detailForm (@RequestParam String id, Model model, RedirectAttributes rd) {
 		if(id == null || id.isBlank()) {
 			return errorMsg(rd);
-			//return "redirect:/";
 		}
 		MemberVO dbMember = ms.getInfo(id);
 		if(dbMember == null) {
 			return errorMsg(rd);
-			//return "redirect:/";
 		}
 		model.addAttribute("item", dbMember);
 		return "/member/memberDetail";

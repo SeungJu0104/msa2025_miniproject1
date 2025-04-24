@@ -35,10 +35,6 @@
 				  <td><input name="title" id="postTitle" value="${post.title}"></td>
 				</tr>
 				<tr>
-				  <td>작성자</td>
-				  <td><input name="writer" id="postWriter" value="${post.writer}"></td>
-				</tr>
-				<tr>
 				  <td>조회수</td>
 				  <td>${post.views}</td>
 				</tr>

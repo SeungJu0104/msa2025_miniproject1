@@ -37,10 +37,12 @@
 				FROM 
 					TB_MEMBER
 				WHERE 
-					DELETEYN = 'N' <include refid = "search"/>) M
+					DELETEYN = 'N' <include refid = "search"/>
+				ORDER BY
+					MEMBERNO DESC
+				) M
 			WHERE ROWNUM BETWEEN 1 AND #{end}) R
 		WHERE RNUM BETWEEN #{start} AND #{end}
-		ORDER BY MEMBERNO DESC
 	</select>
 	<update id="updateFailure">
 		UPDATE 

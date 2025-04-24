@@ -13,5 +13,8 @@ public interface BoardDAO {
 	public BoardVO getPost(BoardVO post);
 	public int addViewCnt(int postNo);
 	public int updatePost(BoardVO post);
+	public int deletePost(BoardVO post);
+	public String getPassword(BoardVO post);
+	public int registerPost(BoardVO post);
 
 }

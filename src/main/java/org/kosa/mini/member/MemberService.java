@@ -1,10 +1,8 @@
 package org.kosa.mini.member;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import org.kosa.mini.board.BoardVO;
 import org.kosa.mini.util.PageResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -12,7 +12,10 @@
 		</if>
 	</sql>
 	<sql id="field1">
-		P.POSTNO, BT.BOARDNAME, M.ID, P.TITLE, P.CONTENT, P.WRITER, P.VIEWS, P.CREATEDAT
+		P.POSTNO, BT.BOARDNAME, M.ID, P.TITLE, P.CONTENT, P.VIEWS, P.CREATEDAT
+	</sql>
+	<sql id="field2">
+		POSTNO = #{postNo}
 	</sql>
 	<sql id="join">
 		TB_POST P
@@ -31,10 +34,11 @@
 				FROM 
 					<include refid="join"/>
 				WHERE 
-				     <include refid="search"/>) B
+				     <include refid="search"/>
+				ORDER BY CREATEDAT DESC
+			) B
 			WHERE ROWNUM BETWEEN 1 AND #{end}) POST
 		WHERE RNUM BETWEEN #{start} AND #{end}
-		ORDER BY POSTNO DESC
 	</select>
 	<select id="getTotalCount" resultType="int">
 		SELECT COUNT(*)
@@ -49,7 +53,15 @@
 		FROM
 			<include refid="join"/>
 		WHERE
-			<include refid="search"/> AND POSTNO = #{postNo}
+			<include refid="search"/> AND <include refid="field2"/>
+	</select>
+	<select id="getPassword" resultType="String">
+		SELECT
+			PASSWORD
+		FROM
+			TB_POST
+		WHERE
+			POSTNO = #{postNo}
 	</select>
 	<update id="addViewCnt">
 		UPDATE
@@ -57,15 +69,46 @@
 		SET
 			VIEWS = VIEWS + 1
 		WHERE
-			POSTNO = #{postNo}
+			<include refid="field2"/>
 	</update>
 	<update id="updatePost">
 		UPDATE
 			TB_POST
 		SET
-			TITLE = #{title}, WRITER = #{writer}, CONTENT = #{content}
+			TITLE = #{title}, CONTENT = #{content}
 		WHERE
-			POSTNO = #{postNo}
+			<include refid="field2"/>
 	</update>
+	<update id="deletePost">
+		UPDATE
+			TB_POST
+		SET
+			DELETEYN = 'Y', DELETEDAT = SYSDATE
+		WHERE
+			<include refid="field2"/> AND PASSWORD = #{password}
+	</update>
+	<insert id="registerPost">
+		INSERT INTO
+			TB_POST(
+				POSTNO, 
+				TITLE, 
+				BOARDNO, 
+				CONTENT, 
+				MEMBERNO,
+				PASSWORD, 
+				CREATEDAT,
+				DELETEYN
+			)
+		VALUES(
+			SEQ_POST.NEXTVAL, 
+			#{title}, 
+			(SELECT BOARDNO FROM TB_BOARDTYPE WHERE BOARDNAME = #{boardName}), 
+			#{content}, 
+			(SELECT MEMBERNO FROM TB_MEMBER WHERE ID = #{id}),
+			#{password}, 
+			SYSDATE,
+			'N'
+			)
+	</insert>
 </mapper>
 

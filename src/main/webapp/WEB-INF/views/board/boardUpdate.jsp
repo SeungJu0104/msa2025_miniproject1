@@ -17,9 +17,10 @@
 	</c:if>
 	<h1>게시글</h1>
 	<div class="container">
+		<%@ include file="../inc/menuBar.jsp" %>
 		<form id="updatePost">
 			<input type="hidden" name="board" value="${post.boardName}">
-			<input type="hidden" name="postNo" value="${post.postNo}">
+			<input type="hidden" id="updatePostNo" name="postNo" value="${post.postNo}">
 		<table class="table table-striped-columns">
 			<tbody>
 				<tr>
@@ -32,7 +33,7 @@
 				</tr>
 				<tr>
 				  <td>제목</td>
-				  <td><input name="title" id="postTitle" value="${post.title}"></td>
+				  <td><input name="title" id="postTitle" value="${post.title}" required></td>
 				</tr>
 				<tr>
 				  <td>조회수</td>
@@ -47,7 +48,7 @@
 		
 		<div class="mb-3">
 			<label for="exampleFormControlTextarea1" class="form-label">내용</label>
-			<textarea class="form-control" id="exampleFormControlTextarea1" rows="10" id="postContent" name="content">${post.content}</textarea>
+			<textarea class="form-control" rows="10" id="postContent" name="content" required>${post.content}</textarea>
 		  </div>
 		<div class="d-flex flex-column align-items-center gap-2 mt-4">
 			<button class="btn btn-primary col-6" type="submit">수정</button>

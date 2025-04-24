@@ -17,6 +17,7 @@
 	</script>
 	</c:if>
 	<h1>게시글</h1>
+	<%@ include file="../inc/menuBar.jsp" %>
 	<div class="container">
 		<table class="table table-striped-columns">
 			<tbody>

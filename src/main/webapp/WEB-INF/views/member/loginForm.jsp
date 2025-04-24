@@ -20,11 +20,11 @@
         <form id="loginForm">
             <div class="form-group">
                 <label for="login_id" class="col-form-label">아이디</label>
-                <input type="text" id="login_id" name="id" class="form-control">
+                <input type="text" id="login_id" name="id" class="form-control" required>
             </div>           
             <div class="form-group">
                 <label for="login_password" class="col-form-label">비밀번호</label>
-                <input type="password" id="login_password" name="password" class="form-control">
+                <input type="password" id="login_password" name="password" class="form-control" required>
             </div>
             <div class="form-group">
                 <button type="submit" class="btn btn-primary col-6" id="login">로그인</button>

@@ -15,8 +15,9 @@
 		alert("${errorMsg}");
 	</script>
 	</c:if>
-	<h1>회원 상세보기</h1>
+	<h1>커뮤니티</h1>
 	<div class="container">
+		<h3>내 정보</h3>
 		<table class="table table-striped">
 			<thead>
 			  <tr>

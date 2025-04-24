@@ -17,6 +17,7 @@
     </c:if>
   <h1>회원가입</h1>
   <div class="container">
+    <%@ include file="../inc/menuBar.jsp" %>
     <form id="memberForm">
         <div class="mb-3">
           <label for="userid" class="form-label">아이디</label>

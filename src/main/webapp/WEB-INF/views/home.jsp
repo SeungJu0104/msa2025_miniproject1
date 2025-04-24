@@ -13,13 +13,10 @@
 			alert("${errorMsg}");
 		</script>
 	</c:if>
+	<h1>커뮤니티</h1>
 	<div class="container">
 		<nav class="navbar navbar-expand-lg bg-body-tertiary">
 			<div class="container-fluid">
-			<a class="navbar-brand" id="navbar-home">커뮤니티</a>
-			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
-			</button>
 			<div class="collapse navbar-collapse" id="navbarNav">
 				<ul class="navbar-nav me-auto w-100" id="nav-items">
 				<li class="nav-item">

@@ -97,7 +97,8 @@
 				MEMBERNO,
 				PASSWORD, 
 				CREATEDAT,
-				DELETEYN
+				DELETEYN,
+				VIEWS
 			)
 		VALUES(
 			SEQ_POST.NEXTVAL, 
@@ -107,7 +108,8 @@
 			(SELECT MEMBERNO FROM TB_MEMBER WHERE ID = #{id}),
 			#{password}, 
 			SYSDATE,
-			'N'
+			'N',
+			0
 			)
 	</insert>
 </mapper>

@@ -73,6 +73,7 @@ public class BoardController {
 		if(post.getPostNo() < 1) return errorMsg2(rd, post.getBoard(), sizeDefaultVal);
 		BoardVO dbPost = bs.getPost(post);
 		if(dbPost == null || bs.addViewCnt(dbPost.getPostNo()) != 1) return errorMsg2(rd, post.getBoard(), sizeDefaultVal);
+		dbPost = bs.getPost(post);
 		model.addAttribute("post", dbPost);
 		return "/board/boardDetail";
 	}

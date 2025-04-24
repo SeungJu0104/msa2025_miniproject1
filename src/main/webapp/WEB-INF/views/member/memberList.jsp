@@ -17,6 +17,7 @@
 	</c:if>
 	<h1>회원 목록</h1>
 	<div class="container">
+		<%@ include file="../inc/menuBar.jsp" %>
 		<form id="searchForm">
 			<input type="hidden" name="pageNo" id="pageNo" value="${pageResponse.pageNo}">
 			<input type="hidden" name="type" id="type" value="member">

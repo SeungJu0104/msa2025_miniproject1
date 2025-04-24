@@ -29,6 +29,15 @@ document.addEventListener("DOMContentLoaded", () => {
     //     "회원목록": "/member/memberList"
     // };
 
+    if(document.querySelectorAll("h1")){
+        document.querySelectorAll("h1").forEach(h1 => {
+            h1.addEventListener("click", e => {
+                location.href = contextPath + '/';
+            });
+        });
+    }
+    
+
     const pathMap = {
         "K리그": "/board/getBoard?board=K리그",
         "EPL": "/board/getBoard?board=EPL",
@@ -160,7 +169,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if(memberForm?.userid){
         memberForm.userid.addEventListener("input", e => {
             idDuplicateChk = false;
-            console.log("id" + idDuplicateChk);
             if(regexNo(idRegex, e.target.value)) {
                 document.querySelector(".idInfo").style.display = 'none';
                 idRegexRes = true;
@@ -202,25 +210,20 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if(memberForm){
-        console.log("a");
         formAction(memberForm, '/member/register', 'post');
         validate(memberForm); // form 제출 전 검증
         memberForm.addEventListener("submit", e => {
-
             if(!idRegexRes) {
                 window.alert("아이디는 8~10자 사이이며, 영문자와 숫자만 포함해야 합니다.");
                 memberForm.userid.focus();
                 preventEvent(e);
                 return;
             }
-
             if(!idDuplicateChk){
-                console.log("id" + idDuplicateChk);
                 alert("아이디 중복확인을 해주세요.");
                 preventEvent(e);
                 return;
             }
-
             submitValidate(e, memberForm);
 
         //     // const data = {
@@ -374,16 +377,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if(document.querySelector("#boardUCBtn")){
         const postId = document.querySelector("tr[data-post-id]").getAttribute("data-post-id");
-        console.log(postId);
-        console.log(sessionStorage.getItem("id"));
         document.querySelector("#boardUCBtn").style.display = (sessionStorage.getItem("id") === postId) ? 'block' : 'none';
     }
 
     if(document.querySelector(".boardReg")){
         const postId = document.querySelector("tr[data-post-id]").getAttribute("data-post-id");
         const boardName = document.querySelector("tr[data-board-name]").getAttribute("data-board-name");
-        console.log(postId);
-        document.querySelector(".boardReg").style.display = (sessionStorage.getItem("id") === postId) ? 'block' : 'none';
+        document.querySelector(".boardReg").style.display = (sessionStorage.getItem("id")) ? 'block' : 'none';
         document.querySelector(".boardReg").addEventListener("click", e => {
             location.href = contextPath + '/board/postRegisterForm?board=' + boardName + '&id=' + postId;
         });
@@ -391,7 +391,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if(document.querySelectorAll(".boardDetail")){
         document.querySelectorAll(".boardDetail").forEach(btn => {
-            // btn.style.display = (sessionStorage.getItem("id")) ? 'inline-block' : 'none';
             btn.addEventListener("click", e => {
                 preventEvent(e);
                 const postId = document.querySelector("tr[data-post-id]").getAttribute("data-post-id");
@@ -404,7 +403,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     if(!confirm("삭제하시겠습니까?")) return;
                     const password = prompt("비밀번호(4자리)를 입력해주세요.");
                     if(password === null) return;
-                    if(password.trim().length > 4) {
+                    if(password.trim().length != 4) {
                         alert("비밀번호는 4자리입니다.");
                         return;
                     }
@@ -442,12 +441,16 @@ document.addEventListener("DOMContentLoaded", () => {
     if(document.querySelector("#updatePost")){
         const form = document.querySelector("#updatePost");
         formAction(form, '/board/updatePost', 'post');
-        form.addEventListener("click", e => {
-            if(form.postTitle.value === null || form.postTitle.value === undefined 
-                || form.postContent.value === null || form.postContent.value === undefined){
-                    preventEvent(e);
-                    alert("값을 입력해주세요.");
-                    return;
+        form.addEventListener("submit", e => {
+            if(form.postTitle.value === null || form.postTitle.value === undefined || form.postTitle.value.trim() === ''){
+                preventEvent(e);
+                alert("제목을 입력해주세요.");
+                return;
+            }
+            if(form.postContent.value === null || form.postContent.value === undefined || form.postContent.value.trim() === ''){
+                preventEvent(e);
+                alert("내용을 입력해주세요.");
+                return;
             }
         });
     }
@@ -458,6 +461,11 @@ document.addEventListener("DOMContentLoaded", () => {
             preventEvent(e);
             if(postRegister.boardTitle.value === null || postRegister.boardTitle.value === undefined || postRegister.boardTitle.value.trim().length === 0) {
                 alert("제목을 입력해주세요.");
+                return;
+            }
+            if(postRegister.boardContent.value === null || postRegister.boardContent.value === undefined || postRegister.boardContent.value.trim() === ''){
+                preventEvent(e);
+                alert("내용을 입력해주세요.");
                 return;
             }
             if(regex(postRegex, postRegister.postPassword.value, "숫자 4자리를 입력해주세요.")) return;

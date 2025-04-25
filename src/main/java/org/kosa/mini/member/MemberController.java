@@ -47,9 +47,7 @@ public class MemberController {
 		if(member.getId() == null || member.getPassword() == null 
 			|| !Validate.isValid(idRegex, member.getId()) || !Validate.isValid(pwRegex, member.getPassword())) 
 			return putMsg(key, value, map);
-
 		MemberVO dbMember = ms.login(member);
-
 		if(dbMember == null || !member.getId().equals(dbMember.getId())) return putMsg(key, value, map);
 		if(dbMember.getLoginFailure() == 5 && "N".equals(dbMember.getLockYn())) {
 			ms.updateLockYn(dbMember);
@@ -124,13 +122,10 @@ public class MemberController {
 	
 	@GetMapping("getMember")
 	public String getMember(@RequestParam String id, Model model, RedirectAttributes rd){
-		if(id.isBlank()) {
-			return errorMsg(rd);
-		}
+		if(id.isBlank()) return errorMsg(rd);
+		
 		MemberVO dbMember = ms.getInfo(id);
-		if(dbMember == null) {
-			return errorMsg(rd);
-		}
+		if(dbMember == null) return errorMsg(rd);
 		model.addAttribute("member", dbMember);
 		return "/member/memberUpdate";
 		
@@ -148,10 +143,7 @@ public class MemberController {
 	
 	@PostMapping("updateMember")
 	public String updateMember(MemberVO member, RedirectAttributes rd){
-		System.out.println("a");
-		if(member == null) {
-			return errorMsg(rd);
-		}
+		if(member == null) return errorMsg(rd);
 		if(ms.updateMember(member) == 1) return "redirect:/";
 		return errorMsg(rd);
 
@@ -180,13 +172,9 @@ public class MemberController {
 	
 	@GetMapping("detailForm")
 	public String detailForm (@RequestParam String id, Model model, RedirectAttributes rd) {
-		if(id == null || id.isBlank()) {
-			return errorMsg(rd);
-		}
+		if(id == null || id.isBlank()) return errorMsg(rd);
 		MemberVO dbMember = ms.getInfo(id);
-		if(dbMember == null) {
-			return errorMsg(rd);
-		}
+		if(dbMember == null) return errorMsg(rd);
 		model.addAttribute("item", dbMember);
 		return "/member/memberDetail";
 	}

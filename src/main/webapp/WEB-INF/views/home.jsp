@@ -8,12 +8,8 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/mini.css">
 </head>
 <body data-context="${pageContext.request.contextPath}">
-	<c:if test="${not empty errorMsg }">
-		<script type="text/javascript">
-			alert("${errorMsg}");
-		</script>
-	</c:if>
-	<h1>커뮤니티</h1>
+	<jsp:include page="/WEB-INF/views/inc/showErr.jsp" />
+	<h1>축구 게시판</h1>
 	<div class="container">
 		<nav class="navbar navbar-expand-lg bg-body-tertiary">
 			<div class="container-fluid">
@@ -40,8 +36,8 @@
 				</ul>
 			</div>
 			<button class="btn btn-outline-success me-2 nologin" id="goLogin" type="button">로그인</button>
-			<button class="btn btn-outline-success me-2 login" id="goLogOut" type="button" >로그아웃</button>
-			<button class="btn btn-outline-success me-2 login" id="updateMember" type="button">정보수정</button>
+			<button class="btn btn-outline-danger me-2 login" id="goLogOut" type="button" >로그아웃</button>
+			<!-- <button class="btn btn-outline-success me-2 login" id="updateMember" type="button">정보수정</button> -->
 			<button class="btn btn-outline-success me-2 login" id="detailMember" type="button">상세보기</button>
 			<button class="btn btn-outline-success me-2 nologin" id="goRegister" type="button">회원가입</button>
 			</div>

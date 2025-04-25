@@ -4,7 +4,6 @@ package org.kosa.mini.board;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -44,7 +43,6 @@ public class BoardController {
 	
 	@GetMapping("/getBoard")
 	public String getBoard(String board, String pageNo, String size, String searchValue, Model model, RedirectAttributes rd){
-		log.info(board);
 		if(board == null || board.trim().isBlank()) return errorMsg(rd);			
 		if(boardList.contains(board)) {
 			model.addAttribute("pageResponse", bs.getBoard(board, searchValue, Util.parseInt(pageNo, pageNoDefaultVal), Util.parseInt(size, sizeDefaultVal), Util.parseInt(parserPage, parserDefaultVal)));
@@ -73,7 +71,6 @@ public class BoardController {
 		if(post.getPostNo() < 1) return errorMsg2(rd, post.getBoard(), sizeDefaultVal);
 		BoardVO dbPost = bs.getPost(post);
 		if(dbPost == null || bs.addViewCnt(dbPost.getPostNo()) != 1) return errorMsg2(rd, post.getBoard(), sizeDefaultVal);
-		dbPost = bs.getPost(post);
 		model.addAttribute("post", dbPost);
 		return "/board/boardDetail";
 	}
@@ -133,33 +130,32 @@ public class BoardController {
 	@ResponseBody
 	public Map<String, Object> registerPost(@RequestBody BoardVO post) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		log.info(post.toString());
-		log.info(post.getId());
 		if(post == null || post.getTitle() == null || post.getBoard() == null || post.getBoard().trim().isBlank()) MemberController.putMsg("status", "잘못된 접근입니다.", map);
 		if(post.getTitle().trim().isBlank()) return MemberController.putMsg("status", "제목을 입력해주세요.", map);
 		if(bs.registerPost(post) != 1) return MemberController.putMsg("status", "다시 시도해주세요.", map);
 		map.put("msg", "게시글이 등록됐습니다.");
 		return MemberController.putMsg("status", "ok", map);
 	}
+
+//	브라우저에서 board 값을 영어로 받을 경우
+//	public Map<String, String> boardMapper(List<String> boardList, List<String> mapperList){
+//		Map<String, String> boardNameMap = new HashMap<String, String>();
+//		if(boardList.size() != mapperList.size()) return null;
+//		for(int i = 0; i < boardList.size(); i++) boardNameMap.put(boardList.get(i), mapperList.get(i));
+//		return boardNameMap;
+//	}
 	
-	public Map<String, String> boardMapper(List<String> boardList, List<String> mapperList){
-		Map<String, String> boardNameMap = new HashMap<String, String>();
-		if(boardList.size() != mapperList.size()) return null;
-		for(int i = 0; i < boardList.size(); i++) boardNameMap.put(boardList.get(i), mapperList.get(i));
-		return boardNameMap;
-	}
-	
-	public String errorMsg(RedirectAttributes rd) {
+	public static String errorMsg(RedirectAttributes rd) {
 		rd.addFlashAttribute("errorMsg", "잘못된 접근입니다.");
 		return "redirect:/";
 	}
 	
-	public String errorMsg2(RedirectAttributes rd, String board, int size) {
+	public static String errorMsg2(RedirectAttributes rd, String board, int size) {
 		rd.addFlashAttribute("errorMsg", "다시 시도해주세요.");
 		return url(board, size);
 	}
 	
-	public String url(String board, int size) {
+	public static String url(String board, int size) {
 		return "redirect:/board/getBoard?board=" + board + "&pageNo=1&size=" + size + "&searchValue=";
 	}
 

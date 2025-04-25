@@ -6,6 +6,7 @@ import java.util.Map;
 import org.kosa.mini.util.PageResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MemberService {
@@ -17,14 +18,17 @@ public class MemberService {
 		return mDao.login(member);
 	}
 	
+	@Transactional
 	public int updateFailure(MemberVO dbMember) {
 		return mDao.updateFailure(dbMember);
 	}
-
+	
+	@Transactional
 	public int updateLockYn(MemberVO dbMember) {
 		return mDao.updateLockYn(dbMember);
 	}
 	
+	@Transactional
 	public int lockYn(String memberNo, String lockYn) {
 		return mDao.lockYn(memberNo, lockYn.charAt(0));
 	}
@@ -34,15 +38,14 @@ public class MemberService {
 		map.put("start", (pageNo-1) * size + 1);
 		map.put("end", pageNo * size);
 		map.put("searchValue", searchValue);
-		System.out.println(map.toString());
-		
 		return new PageResponseVO<MemberVO>(pageNo, mDao.getMemberList(map), mDao.getTotalCount(map), size, parserPage);
 	}
 
 	public MemberVO getMember(MemberVO member) {
 		return mDao.getMember(member);
 	}
-
+	
+	@Transactional
 	public int register(MemberVO member) {
 		return mDao.register(member);
 	}
@@ -50,11 +53,13 @@ public class MemberService {
 	public MemberVO getInfo(String id) {
 		return mDao.getInfo(id);
 	}
-
+	
+	@Transactional
 	public int updateMember(MemberVO member) {
 		return mDao.updateMember(member);
 	}
-
+	
+	@Transactional
 	public int deleteMember(MemberVO member) {
 		return mDao.deleteMember(member);
 	}

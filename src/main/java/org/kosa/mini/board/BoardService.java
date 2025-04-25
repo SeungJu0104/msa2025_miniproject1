@@ -6,6 +6,7 @@ import java.util.Map;
 import org.kosa.mini.util.PageResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,15 +29,18 @@ public class BoardService {
 	public BoardVO getPost(BoardVO post) {
 		return bDao.getPost(post);
 	}
-
+	
+	@Transactional
 	public int addViewCnt(int postNo) {
 		return bDao.addViewCnt(postNo);
 	}
-
+	
+	@Transactional
 	public int updatePost(BoardVO post) {
 		return bDao.updatePost(post);
 	}
-
+	
+	@Transactional
 	public int deletePost(BoardVO post) {
 		return bDao.deletePost(post);
 	}
@@ -44,7 +48,8 @@ public class BoardService {
 	public String getPassword(BoardVO post) {
 		return bDao.getPassword(post);
 	}
-
+	
+	@Transactional
 	public int registerPost(BoardVO post) {
 		return bDao.registerPost(post);
 	}

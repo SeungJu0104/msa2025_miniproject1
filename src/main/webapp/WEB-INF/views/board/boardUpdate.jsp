@@ -7,17 +7,14 @@
 <meta charset="UTF-8">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/mini.css">
-<title>게시글</title>
+<title>축구 게시판</title>
 </head>
 <body data-context="${pageContext.request.contextPath}">
-	<c:if test="${not empty errorMsg }">
-	<script type="text/javascript">
-		alert("${errorMsg}");
-	</script>
-	</c:if>
-	<h1>게시글</h1>
+	<jsp:include page="/WEB-INF/views/inc/showErr.jsp" />
+	<h1>축구 게시판</h1>
+	<jsp:include page="/WEB-INF/views/inc/menuBar.jsp" />
 	<div class="container">
-		<%@ include file="../inc/menuBar.jsp" %>
+		<h3>게시글 수정</h3>
 		<form id="updatePost">
 			<input type="hidden" name="board" value="${post.boardName}">
 			<input type="hidden" id="updatePostNo" name="postNo" value="${post.postNo}">
@@ -45,13 +42,12 @@
 				</tr>
 			  </tbody>
 		</table>
-		
 		<div class="mb-3">
 			<label for="exampleFormControlTextarea1" class="form-label">내용</label>
 			<textarea class="form-control" rows="10" id="postContent" name="content" required>${post.content}</textarea>
 		  </div>
 		<div class="d-flex flex-column align-items-center gap-2 mt-4">
-			<button class="btn btn-primary col-6" type="submit">수정</button>
+			<button class="btn btn-outline-success" type="submit">수정</button>
 		</div>
 		</form>
 	</div>

@@ -5,39 +5,29 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>회원 목록</title>
+<title>축구 게시판</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/mini.css">
 </head>
 <body data-context="${pageContext.request.contextPath}">
-	<c:if test="${not empty errorMsg }">
-	<script type="text/javascript">
-		alert("${errorMsg}");
-	</script>
-	</c:if>
-	<h1>회원 목록</h1>
+	<jsp:include page="/WEB-INF/views/inc/showErr.jsp" />
+	<h1>축구 게시판</h1>
+	<jsp:include page="/WEB-INF/views/inc/menuBar.jsp" />
 	<div class="container">
-		<%@ include file="../inc/menuBar.jsp" %>
-		<form id="searchForm">
+		<h3>회원 목록</h3>
+		<form id="searchForm" class="d-flex align-items-center gap-2 mb-3 flex-wrap">
 			<input type="hidden" name="pageNo" id="pageNo" value="${pageResponse.pageNo}">
 			<input type="hidden" name="type" id="type" value="member">
-			<div class="row g-3 align-items-center">
-				<div class="col-auto">
-					<input type="text" id="searchValue" name="searchValue" class="form-control" value="${param.searchValue }"aria-describedby="searchValue">
-				</div>
-				<div class="col-auto">
-					<button class="btn btn-outline-success me-2" type="submit">검색</button>
-				</div>
-				<div class="col-auto">
-					<select name="size" id="size">
-						<c:forTokens items="10,30,50" delims="," var="size">
-							<option value="${size}" ${pageResponse.size == size ? 'selected' : ''}>${size}</option>
-						</c:forTokens>
-					</select>			
-				</div>
-    		</div>
+			<div class="input-group" style="width: 250px;">
+				<input type="text" id="searchValue" name="searchValue" class="form-control" value="${param.searchValue}" placeholder="아이디를 입력해주세요.">
+				<button class="btn btn-outline-success" type="submit">검색</button>
+			</div>
+			<select name="size" id="size" class="form-select form-select-sm w-auto">
+				<c:forTokens items="10,30,50" delims="," var="size">
+					<option value="${size}" ${pageResponse.size == size ? 'selected' : ''}>${size}</option>
+				</c:forTokens>
+			</select>
 		</form>
-		  	  
 		<table class="table table-striped">
 			<thead>
 			  <tr>

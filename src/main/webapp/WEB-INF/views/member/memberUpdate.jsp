@@ -5,18 +5,16 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>회원 정보 수정</title>
+<title>축구 게시판</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/mini.css">
 </head>
 <body data-context="${pageContext.request.contextPath}">
-	<c:if test="${not empty errorMsg }">
-	<script type="text/javascript">
-		alert("${errorMsg}");
-	</script>
-	</c:if>
-  <h1>회원 정보 수정</h1>
+  <jsp:include page="/WEB-INF/views/inc/showErr.jsp" />
+  <h1>축구 게시판</h1>
+  <jsp:include page="/WEB-INF/views/inc/menuBar.jsp" />
   <div class="container">
+    <h3>회원 정보 수정</h3>
     <form id="updateForm">
         <div class="mb-3">
           <label for="userid" class="form-label">아이디</label>
@@ -25,7 +23,7 @@
         <div class="mb-3">
           <label for="password" class="form-label">비밀번호</label>
           <input type="password" class="form-control pwChk" id="password" name="password" placeholder="비밀번호" value="${member.password}" required>
-          <input type="password" class="form-control pwChk" id="passwordValid" placeholder="비밀번호확인" required>
+          <input type="password" class="form-control mt-2 pwChk" id="passwordValid" placeholder="비밀번호확인" required>
           <small class="pwInfo" style="display : none">비밀번호는 8~12자 사이이며, 영문자, 숫자, 특수문자를 각각 1개 이상 포함해야 합니다.</small>
           <small class="pwInfo2" style="display : none">비밀번호와 비밀번호 확인이 일치하지 않습니다.</small>
         </div>
@@ -68,8 +66,7 @@
           <label for="running">운동</label>
         </div> -->
         <div class="d-flex flex-column align-items-center gap-2 mt-4">
-          <button type="submit" class="btn btn-primary col-6" id="memberUpdate">전송</button>
-          <button type="button" class="btn btn-outline-danger col-6" id="memberDel">탈퇴</button>
+          <button type="submit" class="btn btn-primary col-6" id="memberUpdate">수정</button>
         </div>
     </form>
   </div>

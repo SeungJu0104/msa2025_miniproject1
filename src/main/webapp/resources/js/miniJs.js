@@ -37,7 +37,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
     
-
     const pathMap = {
         "K리그": "/board/getBoard?board=K리그",
         "EPL": "/board/getBoard?board=EPL",
@@ -98,7 +97,6 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelector("#goLogOut").addEventListener("click", e => {
             sessionStorage.removeItem('id');
             sessionStorage.removeItem('boardAuth');
-            //sessionStorage.clear();
             location.href = contextPath + '/';
         });
     }
@@ -161,7 +159,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             })
             .catch(error => {
-                alert("다시 시도해주세요.");  // 오류 처리
+                alert("다시 시도해주세요.");  
             });
         });
     }
@@ -200,7 +198,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             })
             .catch(error => {
-                alert("다시 시도해주세요.");  // 오류 처리
+                alert("다시 시도해주세요.");  
             });
         });
     }
@@ -256,14 +254,11 @@ document.addEventListener("DOMContentLoaded", () => {
         //     //     }
         //     // })
         //     // .catch(error => {
-        //     //     alert("다시 시도해주세요.");  // 오류 처리
+        //     //     alert("다시 시도해주세요.");  
         //     // });
-
         });
 
     }
-
-
 
     if(goRegister){
         goRegister.addEventListener("click", e => {
@@ -341,7 +336,7 @@ document.addEventListener("DOMContentLoaded", () => {
             fetch(contextPath + '/member/deleteMember', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json; charset=utf-8' 
+                    'Content-Type': 'application/json; charset=utf-8'
                 },
                 body: JSON.stringify({"id":sessionStorage.getItem("id")})
             })
@@ -427,13 +422,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     .catch(error => {
                         alert("다시 시도해주세요.");
                     });
-
                 }
-                // if(btn.innerText === '작성' && postNo > 0 && boardName !== undefined && boardName !== null && boardName.trim() !== ''){
-                //     //const board = document.querySelector("#board");
-                //     console.log(boardName);
-                //     location.href = contextPath + '/board/postRegisterForm?board=' + boardName + '&id=' + postId;
-                // }
             });
         })
     }
@@ -464,7 +453,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
             if(postRegister.boardContent.value === null || postRegister.boardContent.value === undefined || postRegister.boardContent.value.trim() === ''){
-                preventEvent(e);
                 alert("내용을 입력해주세요.");
                 return;
             }
@@ -511,28 +499,6 @@ function regex (regex, val, msg){
 function regexNo(regex, val){
     if(!regex.test(val)) return false;
     return true;
-}
-
-function postJson(url, data){
-    fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json; charset=utf-8' 
-        },
-        body: JSON.stringify(data)
-    })
-    .then(response => response.json())
-    .then(data => {
-        if(data.status === 'ok') {
-            alert(data.msg);
-        }
-        else {
-            alert(data.status);
-        }
-    })
-    .catch(error => {
-        alert("다시 시도해주세요.");  // 오류 처리
-    });
 }
 
 function change () {
@@ -582,11 +548,13 @@ function validate(formName2){
             p.addEventListener("input", e => {
                 document.querySelector(".pwInfo").style.display = regexNo(pwRegex, e.target.value) ? 'none' : 'block';
                 document.querySelector(".pwInfo2").style.display = (formName2.password.value === formName2.passwordValid.value) ? 'none' : 'block';
+                // if(regexNo(pwRegex, formName2.password.value) && regexNo(pwRegex, formName2.passwordValid.value)) pwRegexRes = true;
+                // if(pwRegexRes === true && formName2.password.value === formName2.passwordValid.value) validPwChk = true;
             });
             p.addEventListener("blur", e => {
                 if(regexNo(pwRegex, formName2.password.value) && regexNo(pwRegex, formName2.passwordValid.value)) pwRegexRes = true;
                 if(pwRegexRes === true && formName2.password.value === formName2.passwordValid.value) validPwChk = true;
-            });
+            });            
             p.addEventListener("change", e => {
                 validPwChk = false;
                 pwRegexRes = false;

@@ -7,7 +7,7 @@
 <mapper namespace="org.kosa.mini.member.MemberDAO"><!-- namespace 별칭 써 줄임말 만들기 -->
 	<sql id="search">
 		<if test="searchValue != null and searchValue != ''">
-			AND ID = #{searchValue}
+			AND ID LIKE concat(concat('%', #{searchValue}), '%')
 		</if>
 	</sql>
 	<sql id="field1">

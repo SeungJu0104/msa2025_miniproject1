@@ -15,7 +15,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const navItems = document.querySelectorAll("#nav-items .nav-item");
     const pageItems = document.querySelectorAll("#page-items .page-item");
     const searchForm = document.querySelector("#searchForm");
-    const goRegister = document.querySelector("#goRegister");
     const memberForm = document.querySelector("#memberForm");
     const updateForm = document.querySelector("#updateForm");
 
@@ -258,13 +257,6 @@ document.addEventListener("DOMContentLoaded", () => {
         //     // });
         });
 
-    }
-
-    if(goRegister){
-        goRegister.addEventListener("click", e => {
-            preventEvent(e);
-            location.href = contextPath + '/member/registerForm';
-        });
     }
 
     document.querySelectorAll('.lockYn').forEach(function(checkbox) {

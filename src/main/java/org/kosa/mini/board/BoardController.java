@@ -71,6 +71,7 @@ public class BoardController {
 		if(post.getPostNo() < 1) return errorMsg2(rd, post.getBoard(), sizeDefaultVal);
 		BoardVO dbPost = bs.getPost(post);
 		if(dbPost == null || bs.addViewCnt(dbPost.getPostNo()) != 1) return errorMsg2(rd, post.getBoard(), sizeDefaultVal);
+		dbPost.setViews(dbPost.getViews() + 1);
 		model.addAttribute("post", dbPost);
 		return "/board/boardDetail";
 	}
@@ -101,7 +102,7 @@ public class BoardController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(post == null || post.getPostNo() < 1 || post.getPassword() == null || post.getPassword().isBlank()) 
 			return MemberController.putMsg("status", "다시 시도해주세요.", map);
-		if(post.getPassword().trim().length() > 4) return MemberController.putMsg("status", "비밀번호는 4자리입니다.", map);
+		if(post.getPassword().trim().length() != 4) return MemberController.putMsg("status", "비밀번호는 4자리입니다.", map);
 		if(!post.getPassword().equals(bs.getPassword(post))) return MemberController.putMsg("status", "비밀번호가 일치하지 않습니다.", map);
 		if(bs.deletePost(post) != 1) return MemberController.putMsg("status", "다시 시도해주세요.", map);
 		map.put("msg", "게시글이 삭제됐습니다.");

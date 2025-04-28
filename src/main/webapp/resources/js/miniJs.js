@@ -210,6 +210,7 @@ document.addEventListener("DOMContentLoaded", () => {
         formAction(memberForm, '/member/register', 'post');
         validate(memberForm); // form 제출 전 검증
         memberForm.addEventListener("submit", e => {
+            
             if(!idRegexRes) {
                 window.alert("아이디는 8~10자 사이이며, 영문자와 숫자만 포함해야 합니다.");
                 memberForm.userid.focus();
@@ -279,6 +280,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             })
             .catch(error => {
+                alert("다시 시도해주세요.");
                 checkbox.checked = !checkbox.checked;
             });
         });

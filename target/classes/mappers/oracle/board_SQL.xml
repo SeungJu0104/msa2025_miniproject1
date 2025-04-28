@@ -11,12 +11,15 @@
 			AND content LIKE concat(concat('%', #{searchValue}), '%')
 		</if>
 	</sql>
+	
 	<sql id="field1">
 		P.POSTNO, BT.BOARDNAME, M.ID, P.TITLE, P.CONTENT, P.VIEWS, P.CREATEDAT
 	</sql>
+	
 	<sql id="field2">
 		POSTNO = #{postNo}
 	</sql>
+	
 	<sql id="join">
 		TB_POST P
 			JOIN 
@@ -24,6 +27,7 @@
 			JOIN 
 			    TB_MEMBER M ON P.MEMBERNO = M.MEMBERNO
 	</sql>
+	
 	<select id="getBoard" resultType="org.kosa.mini.board.BoardVO">
 		SELECT *
 		FROM
@@ -40,6 +44,7 @@
 			WHERE ROWNUM BETWEEN 1 AND #{end}) POST
 		WHERE RNUM BETWEEN #{start} AND #{end}
 	</select>
+	
 	<select id="getTotalCount" resultType="int">
 		SELECT COUNT(*)
 		FROM 
@@ -47,6 +52,7 @@
 		WHERE 
 		     <include refid="search"/>
 	</select>
+	
 	<select id="getPost" resultType="org.kosa.mini.board.BoardVO">
 		SELECT 
 			<include refid="field1"/>
@@ -55,6 +61,7 @@
 		WHERE
 			<include refid="search"/> AND <include refid="field2"/>
 	</select>
+	
 	<select id="getPassword" resultType="String">
 		SELECT
 			PASSWORD
@@ -63,6 +70,7 @@
 		WHERE
 			POSTNO = #{postNo}
 	</select>
+	
 	<update id="addViewCnt">
 		UPDATE
 			TB_POST
@@ -71,6 +79,7 @@
 		WHERE
 			<include refid="field2"/>
 	</update>
+	
 	<update id="updatePost">
 		UPDATE
 			TB_POST
@@ -79,6 +88,7 @@
 		WHERE
 			<include refid="field2"/>
 	</update>
+	
 	<update id="deletePost">
 		UPDATE
 			TB_POST
@@ -87,6 +97,7 @@
 		WHERE
 			<include refid="field2"/> AND PASSWORD = #{password}
 	</update>
+	
 	<insert id="registerPost">
 		INSERT INTO
 			TB_POST(
